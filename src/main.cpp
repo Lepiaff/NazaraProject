@@ -36,7 +36,7 @@ int main()
 
 	///test///
 	GraphicsSetManager graphicsSetManager;
-	MapManager mapManager(s_states.mainStates.gameState->GetWorld(), graphicsSetManager);
+	MapManager mapManager(application, graphicsSetManager);
 	
 	if (mapManager.Exist("Village"))
 	{

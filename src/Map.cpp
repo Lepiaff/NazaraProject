@@ -1,30 +1,34 @@
 #include "Map.h"
 
 
-Ndk::EntityHandle & Map::AddEntity()
+Map::Map(Ndk::Application * app, std::string name, const unsigned int nbLayer) : m_application(app), m_name(name)
 {
-	m_entities.emplace_back(m_parrentWorld->CreateEntity());
+	SetNbLayers(nbLayer);
+}
+
+Ndk::EntityHandle & Map::AddEntity(const unsigned int layer)
+{
+	m_entities.emplace_back(m_layersList[layer]->CreateEntity());
 	return m_entities.back();
 }
 
-void Map::Display()
+void Map::Display(const bool state)
 {
-	for (auto i : m_entities)
+	for (auto entity : m_entities)
 	{
-		i->Enable();
+		if (state)
+		{
+			entity->Enable();
+		}
+		else
+		{
+			entity->Disable();
+		}
 	}
 }
 
-void Map::Hide()
+void Map::SetNbLayers(const int nbLayers)
 {
-	for (auto i : m_entities)
-	{
-		i->Disable();
-	}
-}
-
-void Map::SetNbLayers(const unsigned int nbLayers)
-{
-	//for (auto i = 0; i < nbLayers; i++){}
-		//m_layers.emplace_back();
+	for (auto i = 0; i < nbLayers; i++){}
+		m_layersList.emplace_back(&m_application->AddWorld());
 }

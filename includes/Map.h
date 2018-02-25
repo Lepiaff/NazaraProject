@@ -11,24 +11,21 @@
 class Map
 {
 public:
-	//Map(Ndk::Application & app) : m_application(app);
 	Map() = default;
-	Map(std::string name, Ndk::WorldHandle & parrent) : m_name(name), m_parrentWorld(parrent) {};
+	Map(Ndk::Application * app, std::string name, const unsigned int nbLayer);
 	~Map() = default;
 
-	Ndk::EntityHandle & AddEntity();
-	void Display();
-	void Hide();
-
-	void SetNbLayers(const unsigned int nbLayers);
-
+	Ndk::EntityHandle & AddEntity(const unsigned int layer);
+	std::vector<Ndk::WorldHandle> & GetLayers() { return m_layersList; }
+	void Display(const bool state);
 
 private:
+	void SetNbLayers(const int nbLayers);
+
 	std::string m_name;
-	Ndk::WorldHandle m_parrentWorld;
 	std::vector<Ndk::EntityHandle> m_entities;
 	
-	//Ndk::Application & m_application;
-	//std::vector<Ndk::WorldHandle> m_layers;
-
+	Ndk::Application * m_application;
+	std::vector<Ndk::WorldHandle> m_layersList;
+	
 };

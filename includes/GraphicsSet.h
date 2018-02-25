@@ -14,7 +14,7 @@ public:
 	~GraphicsSet();
 
 	//Set
-	bool SetMaterial(std::string filePath, Nz::Vector2f size = Nz::Vector2f(32, 32));
+	bool SetMaterial(std::string filePath, Nz::Vector2ui size = Nz::Vector2ui(32, 32));
 
 	//Get
 	Nz::SpriteRef GetSprite(std::size_t idSprite) { return (idSprite < m_spriteList.size() ? m_spriteList[idSprite] : Nz::SpriteRef()); }
@@ -26,7 +26,7 @@ protected:
 	void CreateSpriteList();
 
 	std::string m_texturePath;
-	Nz::Vector2f m_sizeTiles;
+	Nz::Vector2ui m_sizeTiles;
 	Nz::MaterialRef m_material;
 	std::vector<Nz::SpriteRef> m_spriteList;
 

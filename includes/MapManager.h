@@ -23,7 +23,7 @@ namespace fs = std::experimental::filesystem;
 class MapManager
 {
 public:
-	MapManager(Ndk::WorldHandle & world, GraphicsSetManager& graphicsSetManager) : m_folderMap(FOLDER_MAP_PATH), m_parrentWorld(world), m_graphicsSetManager(graphicsSetManager) { ; }
+	MapManager(Ndk::Application & app, GraphicsSetManager& graphicsSetManager) : m_folderMap(FOLDER_MAP_PATH), m_application(app), m_graphicsSetManager(graphicsSetManager) { ; }
 	~MapManager() = default;
 
 	bool Exist(const std::string & mapName);
@@ -32,7 +32,7 @@ public:
 private:
 	bool CreateMap(const std::string & map);
 
-	Ndk::WorldHandle m_parrentWorld;
+	Ndk::Application & m_application;
 	std::string m_folderMap;
 	std::map<std::string, Map> m_maps;
 	GraphicsSetManager & m_graphicsSetManager;

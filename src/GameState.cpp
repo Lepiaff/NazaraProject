@@ -1,31 +1,18 @@
 #include "GameState.h"
 
-GameState::GameState(Ndk::Application& app, Nz::RenderWindow& renderWindow, StateData & states) : AbstractState(app, renderWindow, states),
-		m_view(m_world->CreateEntity())
+GameState::GameState(Ndk::Application& app, Nz::RenderWindow& renderWindow, StateData & states) : AbstractState(app, renderWindow, states)
 {
-	///////////Préparation de la fenetre///////////
-	Ndk::NodeComponent & nodecomponant = m_view->AddComponent<Ndk::NodeComponent>();
-	Ndk::CameraComponent & cameracomponant = m_view->AddComponent<Ndk::CameraComponent>();
-	cameracomponant.SetTarget(&m_renderWindow);
-
-	cameracomponant.SetProjectionType(Nz::ProjectionType_Orthogonal);
-
-	//paramètres
-	m_world->GetSystem<Ndk::RenderSystem>().SetGlobalUp(Nz::Vector3f::Down());
-	m_world->GetSystem<Ndk::RenderSystem>().SetDefaultBackground(Nz::ColorBackground::New(Nz::Color(217, 122, 214)));
-
-	//On désactive la vue pour ne pas l'afficher à la construction de l'état
-	m_view->Disable();
+	
 }
 
 void GameState::Enter(Ndk::StateMachine & fsm)
 {
-	m_view->Enable();
+	DisplayMap(true);
 }
 
 void GameState::Leave(Ndk::StateMachine & fsm)
 {
-	m_view->Disable();
+	DisplayMap(false);
 }
 
 bool GameState::Update(Ndk::StateMachine & fsm, float elapsedTime)
@@ -44,18 +31,56 @@ bool GameState::Update(Ndk::StateMachine & fsm, float elapsedTime)
 	return true;
 }
 
-void GameState::SetMap(Map * map)
+bool GameState::SetMap(Map * map)
 {
+	if (m_currentMap)
+		return false;
+
 	m_currentMap = map;
-	LoadMap();
+
+	for (auto layer : m_currentMap->GetLayers())
+	{
+		m_viewList.emplace_back(layer->CreateEntity());
+
+		///////////Préparation de la fenetre///////////
+		Ndk::NodeComponent & nodecomponant = m_viewList.back()->AddComponent<Ndk::NodeComponent>();
+		Ndk::CameraComponent & cameraComponant = m_viewList.back()->AddComponent<Ndk::CameraComponent>();
+		cameraComponant.SetTarget(&m_renderWindow);
+
+		cameraComponant.SetProjectionType(Nz::ProjectionType_Orthogonal);
+
+		//paramètres
+		layer->GetSystem<Ndk::RenderSystem>().SetGlobalUp(Nz::Vector3f::Down());
+		layer->GetSystem<Ndk::RenderSystem>().SetDefaultBackground(Nz::ColorBackground::New(Nz::Color(217, 122, 214)));
+	}
+	//On desactive la map pour le moment
+	DisplayMap(false);
+	return true;
 }
 
-void GameState::LoadMap()
+void GameState::DisplayMap(const bool state)
 {
-	m_currentMap->Display();
+	for (auto view : m_viewList)
+	{
+		if (state)
+		{
+			view->Enable();
+		}
+		else {
+			view->Disable();
+		}
+	}
+	//m_currentMap->Display(state); // désactive chaque entité de la map....
 }
 
-void GameState::ClearMap()
+void GameState::DisplayLayer(const unsigned int layer, bool display)
 {
-	m_currentMap->Hide();
+	if (display)
+	{
+		m_viewList[layer]->Enable();
+	}
+	else {
+		m_viewList[layer]->Disable();
+	}
+	
 }

@@ -31,13 +31,13 @@ class GameState : public AbstractState
 		void Leave(Ndk::StateMachine& fsm) override;
 		bool Update(Ndk::StateMachine& fsm, float elapsedTime) override;
 
-		void SetMap(Map * map);
-		void ClearMap();
-		void LoadMap();
+		bool SetMap(Map * map);
+		void DisplayMap(const bool state);
+		void DisplayLayer(const unsigned int layer, bool display = true);
 
 	protected:
 		Map * m_currentMap = nullptr;
-		Ndk::EntityHandle m_view;
+		std::vector<Ndk::EntityHandle> m_viewList;
 
 		float m_elapsedTime = 0;
 	

@@ -10,7 +10,7 @@ GraphicsSet::~GraphicsSet()
 {
 }
 
-bool GraphicsSet::SetMaterial(std::string filePath, Nz::Vector2f size)
+bool GraphicsSet::SetMaterial(std::string filePath, Nz::Vector2ui size)
 {
 	m_texturePath = filePath;
 	m_sizeTiles = size;
@@ -44,9 +44,6 @@ void GraphicsSet::CreateSpriteList()
 	std::size_t nbTileHeight = static_cast<std::size_t>(tempSprite->GetSize().y / m_sizeTiles.y);
 	std::size_t nbTileWidth = static_cast<std::size_t>(tempSprite->GetSize().x / m_sizeTiles.x);
 
-	std::cout << "Nombre de tuile verticale : " << nbTileHeight << std::endl ;
-	std::cout << "Nombre de tuile horizontale : " << nbTileWidth << std::endl;
-
 	for (std::size_t j = 0 ; j < nbTileHeight ; j++)
 	{
 		for (std::size_t i = 0 ; i < nbTileWidth ; i++)
@@ -54,7 +51,7 @@ void GraphicsSet::CreateSpriteList()
 			Nz::Rectui textureBox(i*m_sizeTiles.x, j*m_sizeTiles.y, m_sizeTiles.x, m_sizeTiles.y);
 			m_spriteList.emplace_back(Nz::Sprite::New(m_material));
 			m_spriteList.back()->SetTextureRect(textureBox);
-			m_spriteList.back()->SetSize(m_sizeTiles);
+			m_spriteList.back()->SetSize(static_cast<Nz::Vector2f>(m_sizeTiles));
 		}
 	}
 }
