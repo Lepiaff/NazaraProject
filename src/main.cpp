@@ -12,8 +12,12 @@
 #include <NDK/State.hpp>
 #include <NDK/StateMachine.hpp>
 
-#include "Game.h"
-#include "Menu.h"
+#include "GameState.h"
+#include "MenuState.h"
+#include "Structure.h"
+#include "GraphicsSet.h"
+
+#include "MapManager.h"
 
 int main()
 {
@@ -23,20 +27,31 @@ int main()
 	mainWindow.Create(Nz::VideoMode(800, 600, 32), "Test");
 	mainWindow.EnableVerticalSync(true);
 
-	auto menuStat{ std::make_shared<Menu>(application, mainWindow) };
-	auto gameStat{ std::make_shared<Game>(application, mainWindow) };
+	StateData s_states{ 
+			std::make_shared<MenuState>(application, mainWindow, s_states),
+			std::make_shared<GameState>(application, mainWindow, s_states)
+	};
+		
+	Ndk::StateMachine monInstance{ s_states.mainStates.menuState };
 
-	Ndk::StateMachine monInstance { gameStat };
-
-	monInstance.PushState(menuStat);
-		while (application.Run())
+	///test///
+	GraphicsSetManager graphicsSetManager;
+	MapManager mapManager(s_states.mainStates.gameState->GetWorld(), graphicsSetManager);
+	
+	if (mapManager.Exist("Village"))
 	{
-		if (!monInstance.Update(application.GetUpdateTime()))
-		{
-			// Gestion d'erreur si besoin 
-			return EXIT_FAILURE; // EXIT_SUCCESS si c'est juste la fin du jeu 
-		}
+		s_states.mainStates.gameState->SetMap(&mapManager.GetMap("Village"));
 	}
+	///end///
+		while (application.Run())
+		{
+			if (!monInstance.Update(application.GetUpdateTime()))
+			{
+				// Gestion d'erreur si besoin 
+				return EXIT_FAILURE; // EXIT_SUCCESS si c'est juste la fin du jeu 
+			}
+
+		}
 
 	return EXIT_SUCCESS;
 }

@@ -1,24 +1,33 @@
-#include "Menu.h"
+#include "MenuState.h"
 
-Menu::Menu(Ndk::Application& app, Nz::RenderWindow& renderWindow) : AbstractState(app, renderWindow),
+MenuState::MenuState(Ndk::Application& app, Nz::RenderWindow& renderWindow, StateData & states) : AbstractState(app, renderWindow, states),
 		m_view(m_world->CreateEntity()),
-		m_canvas(m_world->CreateHandle(), m_renderWindow->GetEventHandler(), m_renderWindow->GetCursorController().CreateHandle()),
+		m_canvas(m_world->CreateHandle(), m_renderWindow.GetEventHandler(), m_renderWindow.GetCursorController().CreateHandle()),
 		m_backToGameButton(*m_canvas.Add<Ndk::ButtonWidget>()),
 		m_newGameButton(*m_canvas.Add<Ndk::ButtonWidget>()),
 		m_loadGameButton(*m_canvas.Add<Ndk::ButtonWidget>()),
 		m_saveGameButton(*m_canvas.Add<Ndk::ButtonWidget>()),
 		m_quitGameButton(*m_canvas.Add<Ndk::ButtonWidget>())
-{
+		
+{	
 	///////////Préparation de la fenetre///////////
 	
-	Ndk::NodeComponent& nodeViewComponent = m_view->AddComponent<Ndk::NodeComponent>();
-	Ndk::CameraComponent& viewer = m_view->AddComponent<Ndk::CameraComponent>();
-	viewer.SetTarget(m_renderWindow);
-	viewer.SetProjectionType(Nz::ProjectionType_Orthogonal);
-	m_canvas.SetSize({ static_cast<float>(m_renderWindow->GetSize().x), static_cast<float>(m_renderWindow->GetSize().y) });
-	m_world->GetSystem<Ndk::RenderSystem>().SetDefaultBackground(Nz::ColorBackground::New(Nz::Color(117, 122, 214)));
-	Nz::Vector2ui windowSize = m_renderWindow->GetSize();
+	Ndk::NodeComponent & nodecomponant = m_view->AddComponent<Ndk::NodeComponent>();
+	Ndk::CameraComponent & cameracomponant = m_view->AddComponent<Ndk::CameraComponent>();
+	cameracomponant.SetTarget(&m_renderWindow);
+	cameracomponant.SetProjectionType(Nz::ProjectionType_Orthogonal);
 	
+	//Redimensionnement du Canvas
+	m_canvas.SetSize({ static_cast<float>(m_renderWindow.GetSize().x), static_cast<float>(m_renderWindow.GetSize().y) });
+
+	//paramètres
+	m_world->GetSystem<Ndk::RenderSystem>().SetGlobalUp(Nz::Vector3f::Down());
+	Nz::Vector2ui windowSize = m_renderWindow.GetSize();
+	m_world->GetSystem<Ndk::RenderSystem>().SetDefaultBackground(Nz::ColorBackground::New(Nz::Color(117, 122, 214)));
+
+	//On désactive la vue pour ne pas l'afficher à la construction de l'état
+	m_view->Disable();
+
 	///////////Bouton Nouvelle partie///////////
 	m_backToGameButton.UpdateText(Nz::SimpleTextDrawer::Draw("Reprendre la partie", 50));
 	m_backToGameButton.Move(25.f, (windowSize.y / 2) - 2*(m_backToGameButton.GetSize().y + 10), 0.f);
@@ -43,60 +52,69 @@ Menu::Menu(Ndk::Application& app, Nz::RenderWindow& renderWindow) : AbstractStat
 	m_quitGameButton.UpdateText(Nz::SimpleTextDrawer::Draw("Quitter le jeu", 50));
 	m_quitGameButton.Move(25.f, (windowSize.y / 2) + 2*(m_quitGameButton.GetSize().y + 10), 0.f);
 	m_quitGameButton.ResizeToContent();
-
 }
 
 //Méthodes virtuelles de fonctionnement des states
 
-void Menu::Enter(Ndk::StateMachine & fsm)
+void MenuState::Enter(Ndk::StateMachine & fsm)
 {
+	m_view->Enable();
+
 	//Connexion des slot aux signaux des boutons
 	Connect();
-	
 }
 
-void Menu::Leave(Ndk::StateMachine & fsm)
+void MenuState::Leave(Ndk::StateMachine & fsm)
 {
+	m_view->Disable();
+
 	//Déconnexion des slots puisque changement de state
 	Disonnect();
 }
 
-bool Menu::Update(Ndk::StateMachine & fsm, float elapsedTime)
+bool MenuState::Update(Ndk::StateMachine & fsm, float elapsedTime)
 {
-	m_canvas.SetSize({ static_cast<float>(m_renderWindow->GetSize().x), static_cast<float>(m_renderWindow->GetSize().y) });
-	m_renderWindow->Display();
-	
+	if (m_changeState)
+	{
+		//m_view->Disable();
+		fsm.ChangeState(m_states.mainStates.gameState);
+		m_changeState = false;
+	}
+
+	m_canvas.SetSize({ static_cast<float>(m_renderWindow.GetSize().x), static_cast<float>(m_renderWindow.GetSize().y) });
+	m_renderWindow.Display();
 
 	return true;
 }
 
 
 //CallBacks liés aux boutons
-void Menu::CallBack1(const Ndk::ButtonWidget* button)
+void MenuState::CallBack1(const Ndk::ButtonWidget* button)
 {
 	std::cout << "Reprendre la partie" << std::endl;
 }
 
-void Menu::CallBack2(const Ndk::ButtonWidget * button)
+void MenuState::CallBack2(const Ndk::ButtonWidget * button)
 {
 	std::cout << "Nouvelle partie" << std::endl;
+	m_changeState = true;
 }
 
-void Menu::CallBack3(const Ndk::ButtonWidget * button)
+void MenuState::CallBack3(const Ndk::ButtonWidget * button)
 {
 	std::cout << "Charger une partie" << std::endl;
 }
 
-void Menu::CallBack4(const Ndk::ButtonWidget * button)
+void MenuState::CallBack4(const Ndk::ButtonWidget * button)
 {
 	std::cout << "Sauvegarder la partie" << std::endl;
 }
 
-void Menu::CallBack5(const Ndk::ButtonWidget * button)
+void MenuState::CallBack5(const Ndk::ButtonWidget * button)
 {
 	std::cout << "Quitter le jeu" << std::endl;
 	//Ndk::Application::Instance()->Quit();
-	m_AppParent->Quit();
+	m_appParent.Quit();
 }
 
 

@@ -39,3 +39,8 @@
 *.bak_000f
 *.bak_001d
 *.bak_002d
+*.bmp
+*.png
+*.svg
+*.db
+*.jpg
