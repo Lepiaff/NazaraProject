@@ -1,4 +1,4 @@
-#include <memory>
+/*#include <memory>
 
 #include <Nazara/Graphics.hpp>
 #include <Nazara/Renderer.hpp>
@@ -10,13 +10,12 @@
 #include <iostream>
 
 #include <NDK/State.hpp>
-#include <NDK/StateMachine.hpp>
+#include <NDK/StateMachine.hpp>*/
 
 #include "GameState.h"
 #include "MenuState.h"
 #include "Structure.h"
 #include "GraphicsSet.h"
-
 #include "MapManager.h"
 
 int main()
@@ -27,20 +26,20 @@ int main()
 	mainWindow.Create(Nz::VideoMode(800, 600, 32), "Test");
 	mainWindow.EnableVerticalSync(true);
 
-	StateData s_states{ 
-			std::make_shared<MenuState>(application, mainWindow, s_states),
-			std::make_shared<GameState>(application, mainWindow, s_states)
+	NzP::StateData s_states{ 
+			std::make_shared<NzP::MenuState>(application, mainWindow, s_states),
+			std::make_shared<NzP::GameState>(application, mainWindow, s_states)
 	};
 		
 	Ndk::StateMachine monInstance{ s_states.mainStates.menuState };
 
 	///test///
-	GraphicsSetManager graphicsSetManager;
-	MapManager mapManager(application, graphicsSetManager);
+	NzP::GraphicsSetManager graphicsSetManager;
+	NzP::MapManager mapManager(application, graphicsSetManager);
 	
-	if (mapManager.Exist("Village"))
+	if (mapManager.LoadMap("Village"))
 	{
-		s_states.mainStates.gameState->SetMap(&mapManager.GetMap("Village"));
+		s_states.mainStates.gameState->SetMap(mapManager.GetMap("Village"));
 	}
 	///end///
 		while (application.Run())

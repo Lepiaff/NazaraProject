@@ -1,34 +1,66 @@
 #include "Map.h"
 
-
-Map::Map(Ndk::Application * app, std::string name, const unsigned int nbLayer) : m_application(app), m_name(name)
+namespace NzP
 {
-	SetNbLayers(nbLayer);
-}
-
-Ndk::EntityHandle & Map::AddEntity(const unsigned int layer)
-{
-	m_entities.emplace_back(m_layersList[layer]->CreateEntity());
-	return m_entities.back();
-}
-
-void Map::Display(const bool state)
-{
-	for (auto entity : m_entities)
+	Map::Map(Ndk::Application * app, std::string name, const unsigned int nbLayer) : m_application(app), NAME(name)
 	{
-		if (state)
+		CreateLayers(nbLayer);
+	}
+
+
+
+
+
+
+
+
+
+	bool Map::Load()
+	{
+		//J'instancie autant de world qu'il y a de layer à ma map
+		CreateLayers(NB_LAYERS);
+		/*for (auto i = 0; i < NB_LAYERS; ++i)
+			m_layerList.emplace_back(m_application->AddWorld());*/
+
+		//Je créé les entités
+		for (auto entity : ENTITIES)
 		{
-			entity->Enable();
+			entity.CreateEntity(m_layerList, m_entities);
 		}
-		else
+		return true;
+	}
+
+
+
+
+
+
+
+
+	Ndk::EntityHandle & Map::AddEntity(const unsigned int layer)
+	{
+		m_entities.emplace_back(m_layerList[layer]->CreateEntity());
+		return m_entities.back();
+	}
+
+	void Map::Display(const bool state)
+	{
+		for (auto entity : m_entities)
 		{
-			entity->Disable();
+			if (state)
+			{
+				entity->Enable();
+			}
+			else
+			{
+				entity->Disable();
+			}
 		}
 	}
-}
 
-void Map::SetNbLayers(const int nbLayers)
-{
-	for (auto i = 0; i < nbLayers; i++){}
-		m_layersList.emplace_back(&m_application->AddWorld());
+	void Map::CreateLayers(const unsigned int nbLayers)
+	{
+		for (unsigned int i = 0; i < nbLayers; i++) {}
+			m_layerList.emplace_back(&m_application->AddWorld());
+	}
 }

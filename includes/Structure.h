@@ -1,38 +1,26 @@
 #pragma once
 
 #include <memory>
-//#include <map>
 
 #include <iostream>
+//#include "GameState.h"
+//#include "MenuState.h"
 
-class GameState;
-class MenuState;
 
-struct MainStates;
-//enum MAP_NAMES;
 
-struct StateData
+
+namespace NzP
 {
-	struct MainStates
+	struct MainStates;
+	class GameState;
+	class MenuState;
+
+	struct StateData
 	{
-		std::shared_ptr<MenuState> menuState;
-		std::shared_ptr<GameState> gameState;
-	}mainStates;
-
-	/*std::map<MAP_NAMES, std::shared_ptr<Map>> map;
-
-	struct Gui
-	{
-		std::shared_ptr<Inventory> inventory;
-		std::shared_ptr<PlayerStatistiques> playerStatistiques;
-	}gui;
-
-	enum MAP_NAMES
-	{
-		STARTING,
-		SECOND,
-		THIRD
-	};*/
-
-};
-
+		struct MainStates
+		{
+			std::shared_ptr<MenuState> menuState;
+			std::shared_ptr<GameState> gameState;
+		}mainStates;
+	};
+}

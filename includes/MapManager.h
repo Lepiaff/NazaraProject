@@ -6,6 +6,13 @@
 #include <fstream>
 #include <iostream>
 #include <filesystem>
+#include <boost/archive/xml_oarchive.hpp>
+#include <boost/archive/xml_iarchive.hpp>
+#include <boost/serialization/serialization.hpp>
+#include <boost/serialization/string.hpp>
+#include <boost/serialization/vector.hpp>
+#include <boost/serialization/scoped_ptr.hpp>
+#include <boost/scoped_ptr.hpp>
 
 #include <Nazara/Utility.hpp>
 #include <NDK/Application.hpp>
@@ -20,21 +27,28 @@ const std::string FOLDER_MAP_PATH = "D:/Programmation_2018/NazaraProject/NazaraP
 
 namespace fs = std::experimental::filesystem;
 
-class MapManager
+namespace NzP
 {
-public:
-	MapManager(Ndk::Application & app, GraphicsSetManager& graphicsSetManager) : m_folderMap(FOLDER_MAP_PATH), m_application(app), m_graphicsSetManager(graphicsSetManager) { ; }
-	~MapManager() = default;
+	class MapManager
+	{
+	public:
+		MapManager(Ndk::Application & app, NzP::GraphicsSetManager& graphicsSetManager) :
+			m_folderMap(FOLDER_MAP_PATH),
+			m_application(app),
+			m_graphicsSetManager(graphicsSetManager) {}
 
-	bool Exist(const std::string & mapName);
-	Map & GetMap(const std::string & mapName) { return m_maps[mapName]; }
-	
-private:
-	bool CreateMap(const std::string & map);
+		~MapManager() = default;
 
-	Ndk::Application & m_application;
-	std::string m_folderMap;
-	std::map<std::string, Map> m_maps;
-	GraphicsSetManager & m_graphicsSetManager;
+		bool LoadMap(const std::string& mapName);
+		NzP::Map& GetMap(const std::string& mapName) { return m_maps[mapName]; }
 
-};
+	private:
+		bool CreateMap(const std::string& map);
+
+		Ndk::Application & m_application;
+		std::string m_folderMap;
+		std::map<std::string, NzP::Map> m_maps;
+		NzP::GraphicsSetManager & m_graphicsSetManager;
+
+	};
+}

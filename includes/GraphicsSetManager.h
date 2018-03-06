@@ -1,31 +1,36 @@
 #pragma once
 
+#ifndef GRAPHICSSETMANAGER_H
+#define GRAPHICSSETMANAGER_H
+
 #include <string>
 #include <map>
 
 #include <Nazara/Graphics.hpp>
+#include <Nazara/Core/ObjectRef.hpp>
+#include <Nazara/Core/Resource.hpp>
+#include <Nazara/Core.hpp>
+#include <Nazara/Core/ResourceManager.hpp>
 
 #include "GraphicsSet.h"
 
 const std::string GRAPHICS_SET_FOLDER_PATH = "D:/Programmation_2018/NazaraProject/NazaraProject/Ressources/Tilesets/32x32";
 
-class GraphicsSetManager
+namespace NzP
 {
-public:
-	GraphicsSetManager() = default;
-	~GraphicsSetManager() = default;
-
-	//Méthodes libres
-	bool Load(std::string & name);
-	GraphicsSet & GetGraphicsSet(std::string & name) { return m_GraphicsSetMap[name]; }
-
-
-private:
-
-	//Méthodes internes
-	bool Exist(const std::string & name);
 	
+	class GraphicsSetManager
+	{
+	public:
+		GraphicsSetManager() = default;
+		~GraphicsSetManager() = default;
 
-	//Atributs
-	std::map<std::string, GraphicsSet> m_GraphicsSetMap;
-};
+		bool Load(std::string& name);
+
+
+	private:
+
+	};
+
+}
+#endif //GRAPHICSSETMANAGER_H

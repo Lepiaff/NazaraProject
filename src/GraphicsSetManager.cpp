@@ -1,19 +1,17 @@
 #include "GraphicsSetManager.h"
 
-bool GraphicsSetManager::Load(std::string & name)
+namespace NzP
 {
-	if (!Exist(name))
+	bool GraphicsSetManager::Load(std::string& name)
 	{
-		m_GraphicsSetMap[name] = GraphicsSet();
+		if (!GSetManager::Get(GRAPHICS_SET_FOLDER_PATH + "/" + name + ".png")->IsValid())
+		{
+			GraphicsSetRef objectRef;
+		
+			GSetManager::Register(Nz::String(GRAPHICS_SET_FOLDER_PATH + "/" + name + ".png"), objectRef);
+			objectRef->SetMaterial(GRAPHICS_SET_FOLDER_PATH + "/" + name + ".png");
+		} 
+		return GSetManager::Get(GRAPHICS_SET_FOLDER_PATH + "/" + name + ".png")->IsValid();
+			return true;
 	}
-		return m_GraphicsSetMap[name].SetMaterial(GRAPHICS_SET_FOLDER_PATH + "/" + name + ".png");
-
-	return true;
-}
-
-bool GraphicsSetManager::Exist(const std::string & name)
-{
-	if (m_GraphicsSetMap.find(name) != m_GraphicsSetMap.end())
-		return true;
-	return false;
 }

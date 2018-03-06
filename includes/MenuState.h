@@ -1,29 +1,26 @@
 #pragma once
 
-#include <iostream>
-#include <cstdlib>
-#include <memory>
-
-#include <NDK/Prerequisites.hpp>
-#include <NDK/BaseWidget.hpp>
+#include <NDK/Widgets/ButtonWidget.hpp>
 #include <NDK/World.hpp>
 #include <NDK/Components.hpp>
 #include <NDK/Systems.hpp>
-#include <NDK/Widgets.hpp>
+
 #include <NDK/Canvas.hpp>
 #include <Nazara/Renderer/RenderWindow.hpp>
 #include <NDK/Application.hpp>
 #include <NDK/StateMachine.hpp>
 
 #include "AbstractState.h"
-#include "Structure.h"
+//#include "Structure.h"
 #include "GameState.h"
 #include "GraphicsSet.h"
 
-class MenuState : public AbstractState
+namespace NzP
 {
+	class MenuState : public AbstractState
+	{
 	public:
-		MenuState(Ndk::Application & app, Nz::RenderWindow & renderWindow, StateData & states);
+		MenuState(Ndk::Application& app, Nz::RenderWindow& renderWindow, NzP::StateData& states);
 		~MenuState() = default;
 
 		/*void Enter(Ndk::StateMachine& fsm) override;
@@ -52,8 +49,8 @@ class MenuState : public AbstractState
 		}
 
 	private:
-	
-		bool m_changeState { false };
+
+		bool m_changeState{ false };
 
 		Ndk::Canvas m_canvas;
 		Ndk::EntityHandle m_view;
@@ -77,5 +74,5 @@ class MenuState : public AbstractState
 		void CallBack3(const Ndk::ButtonWidget* button);
 		void CallBack4(const Ndk::ButtonWidget* button);
 		void CallBack5(const Ndk::ButtonWidget* button);
-
-};
+	};
+}
