@@ -2,81 +2,71 @@
 
 namespace NzP
 {
-	bool MapManager::LoadMap(const std::string & mapName)
+	bool MapManager::SaveMap(const std::string& mapName)
 	{
-		if (m_maps.find(mapName) == m_maps.end())
+		if (isLoaded(mapName))
 		{
-			return CreateMap(mapName);
+			return SerializeMap(mapName);
 		}
-
+		return false;
+	}
+	bool MapManager::LoadMap(const std::string& mapName)
+	{
+		if (!isLoaded(mapName))
+		{
+			return DeserializeMap(mapName);
+		}
 		return true;
 	}
 
-	bool MapManager::CreateMap(const std::string & mapName)
+	bool MapManager::isLoaded(const std::string& mapName)
 	{
-		fs::path mapPath = m_folderMap + "/" + mapName + "test.map";
-		std::ifstream fichier(mapPath.c_str());
-		boost::archive::xml_iarchive iXMLArchive(fichier);
-
-		m_maps[mapName] = NzP::Map(&m_application, mapName);
-		NzP::Map& MAP = m_maps[mapName];
-				
-		if (fichier)
+		if (m_maps.find(mapName) == m_maps.end())
 		{
-		iXMLArchive >> BOOST_SERIALIZATION_NVP(MAP);
+			return false;
 		}
+		return true;
+	}
 
-
-
-		/*int MONINT = 66;
-		int& MA_REF = MONINT;
-
-		std::vector<int> MONINT_VECTOR;
-		MONINT_VECTOR.emplace_back(11);
-		MONINT_VECTOR.emplace_back(22);
-		MONINT_VECTOR.emplace_back(33);
-		MONINT_VECTOR.emplace_back(44);
-		MONINT_VECTOR.emplace_back(55);
-		fs::path mapPath = m_folderMap + "/" + mapName + "test.map";
+	bool MapManager::SerializeMap(const std::string& mapName)
+	{
+		fs::path mapPath = m_folderMap + "/" + mapName + "Xml.map";
 		std::ofstream fichier(mapPath.c_str());
 		boost::archive::xml_oarchive oXMLArchive(fichier);
-		oXMLArchive << BOOST_SERIALIZATION_NVP(MA_REF);
-		oXMLArchive << BOOST_SERIALIZATION_NVP(MONINT_VECTOR);
-		///Test serialization*/
 
-		/*m_maps[mapName] = NzP::Map(&m_application, mapName);
-		NzP::Map MAP;
-		std::ifstream fichier(mapPath.c_str());
-		boost::archive::xml_iarchive iXMLArchive(fichier);
+		NzP::Map& MAP = m_maps[mapName];
+
 		if (fichier)
 		{
-			iXMLArchive >> BOOST_SERIALIZATION_NVP(MAP);
-		}*/
-		///
+			oXMLArchive << BOOST_SERIALIZATION_NVP(MAP);
+			return true;
+		}
+		return false;
+	}
 
 
 
+	bool MapManager::DeserializeMap(const std::string& mapName)
+	{
 		//temporaire ==>Création du fichier map
-		/*std::ofstream fichier2(mapPath.c_str());
-
-
-		fichier2 << 3 <<std::endl;
+		/*fs::path mapPath = m_folderMap + "/" + mapName + "TextFullSize.map";
+		std::ofstream fichier(mapPath.c_str());
+		fichier << 3 <<std::endl;
 		for (int a = 0; a < 600; a += 32)
 		{
 			for (int b = 0; b < 800; b += 32)
 			{
-				fichier2 << "E 0 " << b << " " << a << " G Village 12 C 0 0 32 32"<<std::endl;
+				fichier << "E 0 " << b << " " << a << " G Village 12 C 0 0 32 32"<<std::endl;
 			}
-		}*/
+		}
+		return true;*/
 
+		///Load map.txt
+		/*fs::path mapPath = m_folderMap + "/" + mapName + "Text.map";
+		std::ifstream fichier(mapPath.c_str());
 
-		//std::ifstream fichier(mapPath.c_str());
-
-
-
-		/*if (fichier)
+		if (fichier)
 		{
-			std::cout << mapPath << ": Map existante." << std::endl;
 			char parametre;
 			Ndk::EntityHandle currentEntity;
 
@@ -84,6 +74,15 @@ namespace NzP
 			unsigned int i = 0;
 			fichier >> i;
 			m_maps[mapName] = Map(&m_application, mapName, i);
+			
+			Nz::Vector2f size;
+			float size_;
+			fichier >> size_;
+			size.x = size_;
+			fichier >> size_;
+			size.y = size_;
+			std::cout << size.x << " " << size.y << std::endl;
+			m_maps[mapName].SetSize(size);
 
 			//variables temp
 			unsigned int layer{ 0 };
@@ -118,31 +117,23 @@ namespace NzP
 						m_maps[mapName].AddTextureName(mapName);
 						fichier >> nameGraphicsSet;
 						fichier >> idTile;
+						
+						Nz::String filePath{ "D:/Programmation_2018/NazaraProject/NazaraProject/Ressources/Tilesets/32x32/Village.png" };
+						
+						GraphicsSetParams params;
+						params.sizeTiles = { 32, 32 };
 
-						if (!m_graphicsSetManager.Load(nameGraphicsSet))
-							return false;
+						GSetManager::Register("Village", GraphicsSet::New(filePath, params));
 
-						graphicsComponent->Attach(m_graphicsSetManager.GetGraphicsSet(nameGraphicsSet).GetSprite(idTile));
+						graphicsComponent->Attach(GSetManager::Get("Village")->GetSprite(idTile));
 						break;
-
 				}
 			}
 			//On cache les entites
 			//m_maps[mapName].Display(false);
 
-
-			///Test serialisation!!!!!!!!!!!!!!!
-			fs::path mapPath2 = m_folderMap + "/" + mapName + "2.map";
-
-			//temporaire ==>Création du fichier map
-			std::ofstream fichier2(mapPath2.c_str());
-
-			boost::archive::xml_oarchive oXMLArchive(fichier2);
-			Map& MAP = m_maps[mapName];
-			oXMLArchive << BOOST_SERIALIZATION_NVP(MAP);
-
-			///
-
+			m_maps[mapName].Save();
+			SerializeMap(mapName);
 			return true;
 		}
 		else
@@ -150,6 +141,22 @@ namespace NzP
 			std::cout <<"Map inexistante." << std::endl;
 			return false;
 		}*/
-		return true;//a supprimer
+
+
+		///Test serialisation!!!!!!!!!!!!!!!
+		fs::path mapPath = m_folderMap + "/" + mapName + "Xml.map";
+		std::ifstream fichier(mapPath.c_str());
+
+		if (fichier.is_open())
+		{
+			boost::archive::xml_iarchive iXMLArchive(fichier);
+			Map& MAP = m_maps[mapName];
+			iXMLArchive >> BOOST_SERIALIZATION_NVP(MAP);
+			m_maps[mapName].Load();
+			return true;
+		}
+		else { return false; }
+
 	}
+
 }

@@ -19,7 +19,7 @@ namespace NzP
 
 	bool GameState::Update(Ndk::StateMachine& fsm, float elapsedTime)
 	{
-		if (m_elapsedTime >= 10)
+		if (m_elapsedTime >= 30)
 		{
 			m_elapsedTime = 0;
 			fsm.ChangeState(m_states.mainStates.menuState);
@@ -28,16 +28,13 @@ namespace NzP
 		{
 			m_elapsedTime += elapsedTime;
 		}
-
+		
 		m_renderWindow.Display();
 		return true;
 	}
 
 	bool GameState::SetMap(NzP::Map& map)
 	{
-		if (m_currentMap)
-			return false;
-
 		m_currentMap = &map;
 
 		for (auto layer : m_currentMap->GetLayers())

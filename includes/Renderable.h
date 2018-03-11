@@ -2,6 +2,8 @@
 
 #include <boost/serialization/access.hpp>
 #include <boost/serialization/export.hpp>
+#include <boost/serialization/shared_ptr.hpp>
+
 #include <NDK\Components.hpp>
 
 namespace NzP
@@ -22,10 +24,9 @@ namespace NzP
 		~Renderable() = default;
 
 		virtual void UpdateGraphicsComponent(Ndk::GraphicsComponent& graphicsComponent) = 0;
+		virtual void Save(const Nz::InstancedRenderableRef& renderable) = 0;
 
 	protected:
 		std::string RENDER_NAME;
 	};
 }
-
-//BOOST_CLASS_EXPORT_GUID(NzP::Sprite, "Sprite")

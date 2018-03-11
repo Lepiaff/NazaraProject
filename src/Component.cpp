@@ -1,6 +1,3 @@
 #include "Component.h"
 
-namespace NzP
-{
-
-}
+BOOST_SERIALIZATION_SHARED_PTR(NzP::Component)

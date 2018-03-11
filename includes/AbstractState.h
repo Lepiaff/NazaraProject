@@ -1,6 +1,13 @@
 #pragma once
 
-#include <Nazara/Graphics.hpp>
+#ifndef ABSTRACTSTATE_H
+#define ABSTRACTSTATE_H
+
+#include <NDK/Application.hpp>
+#include <Nazara/Renderer/RenderWindow.hpp>
+#include <NDK/State.hpp>
+#include <NDK/StateMachine.hpp>
+#include <NDK/World.hpp>
 
 #include "Structure.h"
 
@@ -9,7 +16,7 @@ namespace NzP
 	class AbstractState : public Ndk::State
 	{
 	public:
-		AbstractState(Ndk::Application& app, Nz::RenderWindow& renderWindow, StateData& states) :
+		AbstractState(Ndk::Application& app, Nz::RenderWindow& renderWindow, StateData& states) : Ndk::State(),
 			m_states(states),
 			m_appParent(app),
 			m_world(&m_appParent.AddWorld()),
@@ -18,7 +25,7 @@ namespace NzP
 
 		}
 
-		~AbstractState() = default;
+		virtual ~AbstractState() = default;
 
 
 		virtual void Enter(Ndk::StateMachine& fsm) = 0;
@@ -35,3 +42,6 @@ namespace NzP
 		StateData& m_states;
 	};
 }
+#endif // !ABSTRACTSTATE_H
+
+

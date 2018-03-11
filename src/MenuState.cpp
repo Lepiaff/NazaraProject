@@ -2,7 +2,7 @@
 
 namespace NzP
 {
-	MenuState::MenuState(Ndk::Application& app, Nz::RenderWindow& renderWindow, NzP::StateData& states) : AbstractState(app, renderWindow, states),
+	MenuState::MenuState(Ndk::Application& app, Nz::RenderWindow& renderWindow, StateData& states) : AbstractState(app, renderWindow, states), 
 		m_view(m_world->CreateEntity()),
 		m_canvas(m_world->CreateHandle(), m_renderWindow.GetEventHandler(), m_renderWindow.GetCursorController().CreateHandle()),
 		m_backToGameButton(*m_canvas.Add<Ndk::ButtonWidget>()),
@@ -78,14 +78,15 @@ namespace NzP
 	{
 		if (m_changeState)
 		{
-			//m_view->Disable();
+			m_view->Disable();
 			fsm.ChangeState(m_states.mainStates.gameState);
 			m_changeState = false;
 		}
-
-		m_canvas.SetSize({ static_cast<float>(m_renderWindow.GetSize().x), static_cast<float>(m_renderWindow.GetSize().y) });
-		m_renderWindow.Display();
-
+		else
+		{
+			m_canvas.SetSize({ static_cast<float>(m_renderWindow.GetSize().x), static_cast<float>(m_renderWindow.GetSize().y) });
+			m_renderWindow.Display();
+		}
 		return true;
 	}
 

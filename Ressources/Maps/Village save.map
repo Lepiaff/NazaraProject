@@ -1,4 +1,0 @@
-Entity NodeComponant 0 0 GraphicsComponant Village 12 CollisionComponent2D 0 0 32 32
-Entity NodeComponant 32 0 GraphicsComponant Village 13 CollisionComponent2D 0 0 32 32
-Entity NodeComponant 64 0 GraphicsComponant Village 14 CollisionComponent2D 0 0 32 32
-Entity NodeComponant 64 32 GraphicsComponant Village 15 CollisionComponent2D 0 0 32 32

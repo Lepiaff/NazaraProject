@@ -1,5 +1,9 @@
 #pragma once
 
+#ifndef MAP_H
+#define MAP_H
+
+
 #include <string>
 #include <vector>
 
@@ -7,8 +11,12 @@
 #include <boost/serialization/split_free.hpp>
 #include <boost/archive/xml_oarchive.hpp>
 #include <boost/serialization/serialization.hpp>
+#include <boost/serialization/string.hpp>
 #include <boost/serialization/collection_size_type.hpp>
-
+#include <boost/serialization/array.hpp>
+#include <boost/serialization/assume_abstract.hpp>
+#include <boost/serialization/wrapper.hpp>
+#include <boost/serialization/utility.hpp>
 
 #include <NDK/Application.hpp>
 #include <Ndk/Entity.hpp>
@@ -27,35 +35,41 @@ namespace NzP
 		void serialize(Archive& ar, const unsigned int version)
 		{
 			ar & BOOST_SERIALIZATION_NVP(NAME);
-			ar & BOOST_SERIALIZATION_NVP(SIZE_X);
-			ar & BOOST_SERIALIZATION_NVP(SIZE_Y);
+			ar & BOOST_SERIALIZATION_NVP(SIZE);
 			ar & BOOST_SERIALIZATION_NVP(NB_LAYERS);
 			ar & BOOST_SERIALIZATION_NVP(ENTITIES);
 		}
 
 	public:
 		Map() = default;
-		Map(Ndk::Application* app, std::string name, const unsigned int nbLayer = 0);
+		Map(Ndk::Application* app, std::string name, const unsigned int nbLayer = 1);
+		Map(Ndk::Application* app);
 		~Map() = default;
 
 		bool Load();
+		bool Save();
+
 
 		Ndk::EntityHandle & AddEntity(const unsigned int layer);
-		std::vector<Ndk::WorldHandle>& GetLayers() { return m_layerList; } ///Pourquoi je ne peux pas rendre cette méthode const ??
+		std::vector<Ndk::WorldHandle>& GetLayers() { return m_layerList; }
+		
 		void Display(const bool state);
-
+		void CreateLayers(const unsigned int nbLayers);
 
 		//get et set
 		std::vector<Ndk::EntityHandle> GetEntities() const { return m_entities; }
 
-		//const std::string& GetName() const { return m_name; }
-		//void setName(std::string name) { m_name = std::move(name); }
+		const std::string& GetName() const { return NAME; }
+		void setName(std::string name) { NAME = std::move(name); }
 
 		const unsigned int GetNbLayers() const { return m_layerList.size(); }
-		void CreateLayers(const unsigned int nbLayers);
+		
 
-		//const Nz::Vector2f& GetSize() const { return m_size; }
-		//void SetSize(Nz::Vector2f size) { m_size = std::move(size); }
+		Nz::Vector2f GetSize() const { return Nz::Vector2f{ SIZE.first, SIZE.second }; }
+		void SetSize(Nz::Vector2f size) {
+			SIZE.first = size.x;
+			SIZE.second = size.y;
+		}
 
 		void setEntities(std::vector<Ndk::EntityHandle> entities) { m_entities = std::move(entities); }
 
@@ -78,10 +92,9 @@ namespace NzP
 
 		//Variables sérialisables
 		std::string NAME;
-		float SIZE_X;
-		float SIZE_Y;
+		std::pair<float, float> SIZE;
 		unsigned int NB_LAYERS;
-		std::vector<NzP::Entity> ENTITIES;
+		std::vector<Entity> ENTITIES;
 
 
 		// Autres variables
@@ -97,153 +110,4 @@ namespace NzP
 
 	};
 }
-
-
-//BOOST_CLASS_VERSION(Map, 1)
-/*namespace boost
-{
-	namespace serialization
-	{
-		template<class Archive>
-		void save(Archive & archive, const Map & map, const unsigned int version)
-		{
-			//Enregistrement des caractèristiques de la map
-			std::string NAME = map.GetName();
-			archive & BOOST_SERIALIZATION_NVP(NAME);
-			Nz::Vector2f SIZE_MAP = map.GetSize();
-			archive & BOOST_SERIALIZATION_NVP(SIZE_MAP.x);
-			archive & BOOST_SERIALIZATION_NVP(SIZE_MAP.y);
-			unsigned int NB_LAYER = map.GetNbLayers();
-			archive & BOOST_SERIALIZATION_NVP(NB_LAYER);
-		
-			std::vector<Ndk::EntityHandle> ENTITIES = map.GetEntities() ;
-
-			int idSprite = 0;
-			int idComponant = 0;
-
-			for (auto entity : ENTITIES)
-			{
-				//NODE COMPONENT OBLIGATOIRE
-				Ndk::NodeComponent& NODE_COMPONENT = entity->GetComponent<Ndk::NodeComponent>();
-				
-				///Position
-				Nz::Vector3f POSITION = NODE_COMPONENT.GetPosition();
-				archive & BOOST_SERIALIZATION_NVP(POSITION.x);
-				archive & BOOST_SERIALIZATION_NVP(POSITION.y);
-				///Scale
-				Nz::Vector3f SCALE = NODE_COMPONENT.GetScale();
-				archive & BOOST_SERIALIZATION_NVP(SCALE.x);
-				archive & BOOST_SERIALIZATION_NVP(SCALE.y);
-				///ROTATION
-				float ROTATION_x = NODE_COMPONENT.GetRotation().x;
-				float ROTATION_y = NODE_COMPONENT.GetRotation().y;
-
-				archive & BOOST_SERIALIZATION_NVP(ROTATION_x);
-				archive & BOOST_SERIALIZATION_NVP(ROTATION_y);
-				
-
-				//COMPONENT TYPE
-				const std::vector<std::string>& componentType = map.GetComponentsType();
-				std::string COMPONANT_TYPE;
-
-				
-					COMPONANT_TYPE = componentType[i];
-					archive & BOOST_SERIALIZATION_NVP(COMPONANT_TYPE);
-					if (COMPONANT_TYPE == "SPRITE_COMPONENT")
-					{
-						std::string TEXTURE_NAME = map.GetTextureNames()[idSprite];
-						archive & BOOST_SERIALIZATION_NVP(TEXTURE_NAME);
-
-						unsigned int ID_TILE = map.GetIdTiles()[idSprite];
-						archive & BOOST_SERIALIZATION_NVP(ID_TILE);
-
-						/*float POSITION_X = entity->GetComponent<Ndk::GraphicsComponent>().GetBoundingVolume().aabb.x;
-						float POSITION_Y = entity->GetComponent<Ndk::GraphicsComponent>().GetBoundingVolume().aabb.y;
-						float LARGEUR = entity->GetComponent<Ndk::GraphicsComponent>().GetBoundingVolume().aabb.width;
-						float HAUTEUR = entity->GetComponent<Ndk::GraphicsComponent>().GetBoundingVolume().aabb.height;
-						archive & BOOST_SERIALIZATION_NVP(POSITION_X);
-						archive & BOOST_SERIALIZATION_NVP(POSITION_Y);
-						archive & BOOST_SERIALIZATION_NVP(LARGEUR);
-						archive & BOOST_SERIALIZATION_NVP(HAUTEUR);
-						idComponant++;
-						idSprite++;
-
-					}
-					else if(COMPONANT_TYPE == "TEXT_SPRITE_COMPONENT")
-					{
-
-					}
-					else if(COMPONANT_TYPE == "COLLISION_COMPONENT_2D")
-					{
-
-					}
-					else if(COMPONANT_TYPE == "CONTROL_COMPONENT")
-					{
-
-					}
-					else if (COMPONANT_TYPE == "EVENT_COMPONENT")
-					{
-
-					}
-			}
-		}
-
-		template<class Archive>
-		void load(Archive & archive, const Map & map, const unsigned int version)
-		{
-			std::cout << mapPath << ": Map existante." << std::endl;
-			char parametre;
-			Ndk::EntityHandle currentEntity;
-
-			//On a forcement le nombre de layer en premier
-			unsigned int i = 0;
-			fichier >> i;
-			m_maps[mapName] = Map(&m_application, mapName, i);
-
-			//variables temp
-			unsigned int layer{ 0 };
-			float x{ 0 };
-			float y{ 0 };
-			std::string nameGraphicsSet{ "" };
-			std::size_t idTile{ 0 };
-			Ndk::NodeComponent * nodeComponent = nullptr;
-			Ndk::GraphicsComponent * graphicsComponent = nullptr;
-			while (!fichier.eof())
-			{
-				fichier >> parametre;
-
-				switch (parametre)
-				{
-				case 'E':
-					fichier >> layer;
-					currentEntity = m_maps[mapName].AddEntity(layer);
-
-					nodeComponent = &currentEntity->AddComponent<Ndk::NodeComponent>();
-
-					fichier >> x;
-					fichier >> y;
-					nodeComponent->SetPosition(x, y, 0);
-					break;
-
-				case 'G':
-					graphicsComponent = &currentEntity->AddComponent<Ndk::GraphicsComponent>();
-					m_maps[mapName].AddComponentType("SPRITE_COMPONENT");
-					m_maps[mapName].AddIdTile(0);
-					m_maps[mapName].AddTextureName(mapName);
-					fichier >> nameGraphicsSet;
-					fichier >> idTile;
-
-					if (!m_graphicsSetManager.Load(nameGraphicsSet))
-						return false;
-
-					graphicsComponent->Attach(m_graphicsSetManager.GetGraphicsSet(nameGraphicsSet).GetSprite(idTile));
-					break;
-
-				}
-			}
-		}
-	} // namespace serialization
-} // namespace boost
-BOOST_SERIALIZATION_SPLIT_MEMBER(Map)
-BOOST_SERIALIZATION_SPLIT_FREE(Map)
-*/
+#endif // !MAP_H

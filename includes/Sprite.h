@@ -7,6 +7,8 @@
 
 #include <boost/serialization/access.hpp>
 #include <boost/serialization/base_object.hpp>
+#include <boost/serialization/export.hpp>
+#include <boost/serialization/shared_ptr.hpp>
 
 #include <Nazara/Graphics/Sprite.hpp>
 #include <Nazara/Graphics/Material.hpp>
@@ -27,8 +29,9 @@ namespace NzP
 		template<class Archive>
 		void serialize(Archive& ar, const unsigned int version)
 		{
-			ar & boost::serialization::base_object<Renderable>(*this);
+			BOOST_SERIALIZATION_BASE_OBJECT_NVP(Renderable);
 			ar & BOOST_SERIALIZATION_NVP(TEXTURE_NAME);
+			ar & BOOST_SERIALIZATION_NVP(ID_SPRITE);
 		}
 
 	public:
@@ -38,9 +41,18 @@ namespace NzP
 
 		virtual void UpdateGraphicsComponent(Ndk::GraphicsComponent& graphicsComponent)
 		{
-			Nz::SpriteRef sprite = Nz::ResourceManager<GraphicsSet, GraphicsSetParams>::Get(Nz::String(TEXTURE_NAME))->GetSprite(ID_SPRITE);
+			if (GSetManager::Get(Nz::String(TEXTURE_NAME))->IsValid())
+			{
+				Nz::SpriteRef sprite = GSetManager::Get(Nz::String(TEXTURE_NAME))->GetSprite(ID_SPRITE);
+				graphicsComponent.Attach(sprite);
+			}	
+		}
 
-			graphicsComponent.Attach(sprite);
+		void Save(const Nz::InstancedRenderableRef& renderable)
+		{
+			Nz::Rectf textureRect = dynamic_cast<Nz::Sprite*>(renderable.Get())->GetTextureCoords();
+			TEXTURE_NAME = renderable->GetMaterial()->GetFilePath().ToStdString();
+			ID_SPRITE = GSetManager::Get(TEXTURE_NAME)->GetSpriteId(textureRect);
 		}
 
 	protected:

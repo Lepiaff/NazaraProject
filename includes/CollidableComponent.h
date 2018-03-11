@@ -1,8 +1,13 @@
 #pragma once
 
+#ifndef COLLIDABLECOMPONENT_H
+#define COLLIDABLECOMPONENT_H
+
 #include <boost/serialization/access.hpp>
 #include <boost/serialization/base_object.hpp>
 #include <boost/archive/xml_oarchive.hpp>
+#include <boost/serialization/export.hpp>
+#include <boost/serialization/shared_ptr.hpp>
 
 #include <NDK\Entity.hpp>
 #include <NDK\Components.hpp>
@@ -18,28 +23,28 @@ namespace NzP
 		template<class Archive>
 		void serialize(Archive& ar, const unsigned int version)
 		{
-			ar & boost::serialization::base_object<Component>(*this);
-			ar & BOOST_SERIALIZATION_NVP(POSITION_X);
-			ar & BOOST_SERIALIZATION_NVP(POSITION_y);
-			ar & BOOST_SERIALIZATION_NVP(TAILLE_X);
-			ar & BOOST_SERIALIZATION_NVP(TAILLE_Y);
+			BOOST_SERIALIZATION_BASE_OBJECT_NVP(Component);
+			ar & BOOST_SERIALIZATION_NVP(POSITION);
+			ar & BOOST_SERIALIZATION_NVP(TAILLE);
 		}
 	public:
 		CollidableComponent() : Component("COLLIDABLE_COMPONENT") { ; }
-		~CollidableComponent() = default;
+		virtual ~CollidableComponent() = default;
 
-		virtual void update() { ; }
-
-		virtual void UpdateEntity(Ndk::EntityHandle entity) const
+		virtual void UpdateEntity(Ndk::EntityHandle entity) const override
 		{
 			Ndk::CollisionComponent2D& collisionComponent = entity->AddComponent<Ndk::CollisionComponent2D>();
 			
 		}
 
+		virtual void Save(Ndk::BaseComponent* comp) override
+		{
+
+		}
+
 	protected:
-		unsigned int POSITION_X;
-		unsigned int POSITION_y;
-		unsigned int TAILLE_X;
-		unsigned int TAILLE_Y;
+		unsigned int POSITION[2];
+		unsigned int TAILLE[2];
 	};
 }
+#endif // !COLLIDABLECOMPONENT_H

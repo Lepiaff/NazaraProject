@@ -1,13 +1,15 @@
 #pragma once
 
-#include <Nazara/Renderer/RenderWindow.hpp>
-#include <NDK/Application.hpp>
-#include <NDK/StateMachine.hpp>
+#ifndef GAMESTATE_H
+#define GAMESTATE_H
+
+#include <NDK/Entity.hpp>
 
 #include "AbstractState.h"
-#include "GraphicsSet.h"
-#include "Map.h"
+#include "Structure.h"
 #include "MenuState.h"
+//#include "GraphicsSet.h"
+#include "Map.h"
 
 namespace NzP
 {
@@ -15,7 +17,7 @@ namespace NzP
 	{
 	public:
 		GameState(Ndk::Application& app, Nz::RenderWindow& renderWindow, StateData& states);
-		~GameState() = default;
+		virtual ~GameState() = default;
 
 		void Enter(Ndk::StateMachine& fsm) override;
 		void Leave(Ndk::StateMachine& fsm) override;
@@ -33,3 +35,4 @@ namespace NzP
 
 	};
 }
+#endif // !GAMESTATE_H

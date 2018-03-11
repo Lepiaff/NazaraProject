@@ -1,22 +1,35 @@
-/*#include <memory>
+#include <memory>
 
-#include <Nazara/Graphics.hpp>
-#include <Nazara/Renderer.hpp>
-#include <Nazara/Utility.hpp>
+#include <boost/serialization/base_object.hpp>
+#include <boost/serialization/export.hpp>
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/string.hpp>
+#include <boost/serialization/version.hpp>
+#include <boost/serialization/split_free.hpp>
+#include <boost/archive/xml_oarchive.hpp>
+#include <boost/serialization/serialization.hpp>
+#include <boost/serialization/collection_size_type.hpp>
+#include <boost/serialization/array.hpp>
+#include <boost/serialization/assume_abstract.hpp>
+#include <boost/serialization/unique_ptr.hpp>
+#include <boost/serialization/wrapper.hpp>
+
+
 #include <NDK/Application.hpp>
-#include <NDK/Components.hpp>
-#include <NDK/Systems.hpp>
-#include <NDK/World.hpp>
-#include <iostream>
+#include <Nazara/Platform/VideoMode.hpp>
+#include <Nazara/Renderer/RenderWindow.hpp>
+#include <NDK/StateMachine.hpp>
 
-#include <NDK/State.hpp>
-#include <NDK/StateMachine.hpp>*/
-
-#include "GameState.h"
 #include "MenuState.h"
+#include "GameState.h"
 #include "Structure.h"
-#include "GraphicsSet.h"
+//#include "GraphicsSet.h"
 #include "MapManager.h"
+
+#include "GraphicsComponent.h"
+#include "CollidableComponent.h"
+#include "NodeComponent.h"
+#include "Component.h"
 
 int main()
 {
@@ -26,7 +39,8 @@ int main()
 	mainWindow.Create(Nz::VideoMode(800, 600, 32), "Test");
 	mainWindow.EnableVerticalSync(true);
 
-	NzP::StateData s_states{ 
+	NzP::StateData s_states
+	{ 
 			std::make_shared<NzP::MenuState>(application, mainWindow, s_states),
 			std::make_shared<NzP::GameState>(application, mainWindow, s_states)
 	};
@@ -34,14 +48,14 @@ int main()
 	Ndk::StateMachine monInstance{ s_states.mainStates.menuState };
 
 	///test///
-	NzP::GraphicsSetManager graphicsSetManager;
-	NzP::MapManager mapManager(application, graphicsSetManager);
+	NzP::MapManager mapManager(application);
 	
 	if (mapManager.LoadMap("Village"))
 	{
 		s_states.mainStates.gameState->SetMap(mapManager.GetMap("Village"));
 	}
 	///end///
+
 		while (application.Run())
 		{
 			if (!monInstance.Update(application.GetUpdateTime()))

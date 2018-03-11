@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef MAPMANAGER_H
+#define MAPMANAGER_H
+
 #include <string>
 #include <map>
 
@@ -13,6 +16,7 @@
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/scoped_ptr.hpp>
 #include <boost/scoped_ptr.hpp>
+#include <boost/serialization/export.hpp>
 
 #include <Nazara/Utility.hpp>
 #include <NDK/Application.hpp>
@@ -32,23 +36,26 @@ namespace NzP
 	class MapManager
 	{
 	public:
-		MapManager(Ndk::Application & app, NzP::GraphicsSetManager& graphicsSetManager) :
+		MapManager(Ndk::Application& app) :
 			m_folderMap(FOLDER_MAP_PATH),
-			m_application(app),
-			m_graphicsSetManager(graphicsSetManager) {}
+			m_application(app) {}
 
 		~MapManager() = default;
 
+		bool SaveMap(const std::string& mapName);
 		bool LoadMap(const std::string& mapName);
 		NzP::Map& GetMap(const std::string& mapName) { return m_maps[mapName]; }
 
-	private:
-		bool CreateMap(const std::string& map);
+		bool isLoaded(const std::string& mapName);
 
-		Ndk::Application & m_application;
+	private:
+		bool DeserializeMap(const std::string& mapName);
+		bool SerializeMap(const std::string& mapName);
+
+		Ndk::Application& m_application;
 		std::string m_folderMap;
 		std::map<std::string, NzP::Map> m_maps;
-		NzP::GraphicsSetManager & m_graphicsSetManager;
-
 	};
 }
+#endif MAPMANAGER_H
+

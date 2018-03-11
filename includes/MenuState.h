@@ -1,35 +1,33 @@
 #pragma once
 
-#include <NDK/Widgets/ButtonWidget.hpp>
-#include <NDK/World.hpp>
-#include <NDK/Components.hpp>
-#include <NDK/Systems.hpp>
+#ifndef MENUSTATE_H
+#define MENUSTATE_H
 
 #include <NDK/Canvas.hpp>
-#include <Nazara/Renderer/RenderWindow.hpp>
-#include <NDK/Application.hpp>
-#include <NDK/StateMachine.hpp>
+#include <NDK/Entity.hpp>
+#include <NDK/Widgets/ButtonWidget.hpp>
+#include <NDK/Components/NodeComponent.hpp>
+#include <NDK/Components/CameraComponent.hpp>
+#include <NDK/Systems/RenderSystem.hpp>
+#include <nazara/Graphics/ColorBackground.hpp>
+
 
 #include "AbstractState.h"
-//#include "Structure.h"
+#include "Structure.h"
 #include "GameState.h"
-#include "GraphicsSet.h"
+//#include "GraphicsSet.h"
 
 namespace NzP
 {
 	class MenuState : public AbstractState
 	{
 	public:
-		MenuState(Ndk::Application& app, Nz::RenderWindow& renderWindow, NzP::StateData& states);
-		~MenuState() = default;
+		MenuState(Ndk::Application& app, Nz::RenderWindow& renderWindow, StateData& states);
+		virtual ~MenuState() = default;
 
-		/*void Enter(Ndk::StateMachine& fsm) override;
-		void Leave(Ndk::StateMachine& fsm) override;
-		bool Update(Ndk::StateMachine& fsm, float elapsedTime) override;*/
-
-		virtual void Enter(Ndk::StateMachine& fsm);
-		virtual void Leave(Ndk::StateMachine& fsm);
-		virtual bool Update(Ndk::StateMachine& fsm, float elapsedTime);
+		virtual void Enter(Ndk::StateMachine& fsm) override;
+		virtual void Leave(Ndk::StateMachine& fsm) override;
+		virtual bool Update(Ndk::StateMachine& fsm, float elapsedTime) override;
 
 		void Connect()
 		{
@@ -76,3 +74,4 @@ namespace NzP
 		void CallBack5(const Ndk::ButtonWidget* button);
 	};
 }
+#endif // !MENUSTATE_H

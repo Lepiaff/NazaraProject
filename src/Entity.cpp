@@ -1,6 +1,9 @@
 #include "Entity.h"
 
-namespace NzP
-{
 
-}
+
+
+
+//BOOST_SERIALIZATION_SHARED_PTR(NzP::GraphicsComponent)
+//BOOST_SERIALIZATION_SHARED_PTR(NzP::NodeComponent)
+//BOOST_SERIALIZATION_SHARED_PTR(NzP::CollidableComponent)

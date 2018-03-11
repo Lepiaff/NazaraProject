@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE boost_serialization>
+<boost_serialization signature="serialization::archive" version="16">
+<MAP class_id="0" tracking_level="0" version="0">
+	<NAME>Village</NAME>
+	<SIZE>
+		<count>2</count>
+		<item>8.000000000e+02</item>
+		<item>6.000000000e+02</item>
+	</SIZE>
+	<NB_LAYERS>3</NB_LAYERS>
+	<ENTITIES class_id="1" tracking_level="0" version="0">
+		<count>3</count>
+		<item_version>0</item_version>
+		<item class_id="2" tracking_level="0" version="0">
+			<LAYER_ID>0</LAYER_ID>
+			<COMPONENT class_id="3" tracking_level="0" version="0">
+				<count>2</count>
+				<item_version>1</item_version>
+				<item class_id="4" tracking_level="0" version="1">
+					<px class_id="5" class_name="NODECOMPONENT" tracking_level="1" version="0" object_id="_0">
+						<POSITION>
+							<count>2</count>
+							<item>0.000000000e+00</item>
+							<item>0.000000000e+00</item>
+						</POSITION>
+						<SCALE>
+							<count>2</count>
+							<item>1.000000000e+00</item>
+							<item>1.000000000e+00</item>
+						</SCALE>
+						<ROTATION>0.000000000e+00</ROTATION>
+					</px>
+				</item>
+				<item>
+					<px class_id="6" class_name="GRAPHICSCOMPONENT" tracking_level="1" version="0" object_id="_1">
+						<RENDER_TYPE class_id="7" class_name="SPRITE" tracking_level="1" version="0" object_id="_2">
+							<TEXTURE_NAME>D:/Programmation_2018/NazaraProject/NazaraProject/Ressources/Tilesets/32x32/Village.png</TEXTURE_NAME>
+							<ID_SPRITE>0</ID_SPRITE>
+						</RENDER_TYPE>
+					</px>
+				</item>
+			</COMPONENT>
+		</item>
+		<item>
+			<LAYER_ID>0</LAYER_ID>
+			<COMPONENT>
+				<count>2</count>
+				<item_version>1</item_version>
+				<item>
+					<px class_id_reference="5" object_id="_3">
+						<POSITION>
+							<count>2</count>
+							<item>3.200000000e+01</item>
+							<item>0.000000000e+00</item>
+						</POSITION>
+						<SCALE>
+							<count>2</count>
+							<item>1.000000000e+00</item>
+							<item>1.000000000e+00</item>
+						</SCALE>
+						<ROTATION>0.000000000e+00</ROTATION>
+					</px>
+				</item>
+				<item>
+					<px class_id_reference="6" object_id="_4">
+						<RENDER_TYPE class_id_reference="7" object_id="_5">
+							<TEXTURE_NAME>D:/Programmation_2018/NazaraProject/NazaraProject/Ressources/Tilesets/32x32/Village.png</TEXTURE_NAME>
+							<ID_SPRITE>0</ID_SPRITE>
+						</RENDER_TYPE>
+					</px>
+				</item>
+			</COMPONENT>
+		</item>
+		<item>
+			<LAYER_ID>0</LAYER_ID>
+			<COMPONENT>
+				<count>2</count>
+				<item_version>1</item_version>
+				<item>
+					<px class_id_reference="5" object_id="_6">
+						<POSITION>
+							<count>2</count>
+							<item>6.400000000e+01</item>
+							<item>0.000000000e+00</item>
+						</POSITION>
+						<SCALE>
+							<count>2</count>
+							<item>1.000000000e+00</item>
+							<item>1.000000000e+00</item>
+						</SCALE>
+						<ROTATION>0.000000000e+00</ROTATION>
+					</px>
+				</item>
+				<item>
+					<px class_id_reference="6" object_id="_7">
+						<RENDER_TYPE class_id_reference="7" object_id="_8">
+							<TEXTURE_NAME>D:/Programmation_2018/NazaraProject/NazaraProject/Ressources/Tilesets/32x32/Village.png</TEXTURE_NAME>
+							<ID_SPRITE>0</ID_SPRITE>
+						</RENDER_TYPE>
+					</px>
+				</item>
+			</COMPONENT>
+		</item>
+	</ENTITIES>
+</MAP>
+</boost_serialization>
+

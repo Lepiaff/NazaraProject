@@ -1,10 +1,21 @@
 #pragma once
 
+#ifndef COMPONENT_H
+#define COMPONENT_H
+
 #include <string>
 
 #include <NDK/Entity.hpp>
+#include <NDK/Components.hpp>
 
 #include <boost/serialization/access.hpp>
+#include <boost/serialization/string.hpp>
+#include <boost/serialization/export.hpp>
+#include <boost/serialization/shared_ptr.hpp>
+
+class GraphicsComponent;
+class NodeComponent;
+class CollidableComponent;
 
 namespace NzP
 {
@@ -19,14 +30,14 @@ namespace NzP
 		}
 
 	public:
-		Component() = default;
-		Component(std::string type = "") { TYPE = std::move(type); }
-		~Component() = default;
+		Component(std::string type = "Component") { TYPE = std::move(type); }
+		virtual ~Component() = default;
 
-		virtual void update() = 0;
-		virtual const std::string& GetType() const = 0;
+		virtual const std::string& Type() const { return TYPE; }
 		virtual void UpdateEntity(Ndk::EntityHandle entity) const = 0;
+		virtual void Save(Ndk::BaseComponent* comp) = 0;
 	protected:
 		std::string TYPE;
 	};
 }
+#endif // !COMPONENT_H

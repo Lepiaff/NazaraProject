@@ -1,13 +1,7 @@
 #pragma once
 
 #include <memory>
-
 #include <iostream>
-//#include "GameState.h"
-//#include "MenuState.h"
-
-
-
 
 namespace NzP
 {

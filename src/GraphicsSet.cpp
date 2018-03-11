@@ -2,58 +2,70 @@
 
 namespace NzP
 {
-	GraphicsSet::GraphicsSet(std::string filePath, Nz::Vector2f size) : Nz::RefCounted(), Nz::Resource(), m_texturePath(filePath), m_sizeTiles(size)
+	GraphicsSet::GraphicsSet(const Nz::String& filePath, const GraphicsSetParams& params) : Nz::RefCounted(), Nz::Resource()
 	{
+		SetFilePath(filePath);
+		s_managerParameters = params;
 		LoadMaterial();
 	}
 
-	bool GraphicsSet::SetMaterial(std::string filePath, Nz::Vector2ui size)
+	unsigned int GraphicsSet::GetSpriteId(Nz::Rectf textureRect)
 	{
-		m_texturePath = filePath;
-		m_sizeTiles = size;
+		//A implémenter
+		return 0;
+	}
 
-		return LoadMaterial();
+	Nz::SpriteRef GraphicsSet::GetSprite(std::size_t idSprite)
+	{
+		return (idSprite < s_managerParameters.spriteList.size() ? s_managerParameters.spriteList[idSprite] : Nz::SpriteRef());
 	}
 
 	bool GraphicsSet::LoadMaterial()
 	{
-		m_material = Nz::Material::New();
+		if (!s_managerParameters.IsValid())
+			return false;
 
-		if (m_material->LoadFromFile(m_texturePath))
+		s_managerParameters.material = Nz::Material::New();
+		if (s_managerParameters.material->LoadFromFile(GetFilePath()))
 		{
-			m_material->EnableBlending(true);
-			m_material->SetDstBlend(Nz::BlendFunc_InvSrcAlpha);
-			m_material->SetSrcBlend(Nz::BlendFunc_SrcAlpha);
-			m_material->EnableDepthWrite(false);
+			s_managerParameters.material->EnableBlending(true);
+			s_managerParameters.material->SetDstBlend(Nz::BlendFunc_InvSrcAlpha);
+			s_managerParameters.material->SetSrcBlend(Nz::BlendFunc_SrcAlpha);
+			s_managerParameters.material->EnableDepthWrite(false);
 
 			CreateSpriteList();
 
 			return true;
 		}
-
 		return false;
 	}
 
 	void GraphicsSet::CreateSpriteList()
 	{
-		Nz::SpriteRef tempSprite = Nz::Sprite::New(m_material);
-		std::size_t nbTileHeight = static_cast<std::size_t>(tempSprite->GetSize().y / m_sizeTiles.y);
-		std::size_t nbTileWidth = static_cast<std::size_t>(tempSprite->GetSize().x / m_sizeTiles.x);
+		Nz::SpriteRef tempSprite = Nz::Sprite::New(s_managerParameters.material);
+		std::size_t nbTileHeight = static_cast<std::size_t>(tempSprite->GetSize().y / s_managerParameters.sizeTiles.y);
+		std::size_t nbTileWidth = static_cast<std::size_t>(tempSprite->GetSize().x / s_managerParameters.sizeTiles.x);
 
+		s_managerParameters.spriteList.clear(); //on initialiser la list pour être certain qu'elle est vide avant de la remplir
 		for (std::size_t j = 0; j < nbTileHeight; j++)
 		{
 			for (std::size_t i = 0; i < nbTileWidth; i++)
 			{
-				Nz::Rectui textureBox(i*m_sizeTiles.x, j*m_sizeTiles.y, m_sizeTiles.x, m_sizeTiles.y);
-				m_spriteList.emplace_back(Nz::Sprite::New(m_material));
-				m_spriteList.back()->SetTextureRect(textureBox);
-				m_spriteList.back()->SetSize(static_cast<Nz::Vector2f>(m_sizeTiles));
+				Nz::Rectui textureBox(i*s_managerParameters.sizeTiles.x, j*s_managerParameters.sizeTiles.y, s_managerParameters.sizeTiles.x, s_managerParameters.sizeTiles.y);
+				s_managerParameters.spriteList.emplace_back(Nz::Sprite::New(s_managerParameters.material));
+				s_managerParameters.spriteList.back()->SetTextureRect(textureBox);
+				s_managerParameters.spriteList.back()->SetSize(static_cast<Nz::Vector2f>(s_managerParameters.sizeTiles));
 			}
 		}
 	}
 
 	bool GraphicsSetParams::IsValid() const
 	{
+		if (sizeTiles.x == 0 || sizeTiles.y == 0)
+		{
+			std::cout << "GraphicsParam invalide ! (Penser à initialiser la taille des tuiles)" << std::endl;
+			return false;
+		}
 		return true;
 	}
 
@@ -61,11 +73,6 @@ namespace NzP
 	{
 		return m_impl != nullptr;
 	}
-
-	/*bool GraphicsSet::LoadFromFile(const Nz::String& filePath, const GraphicsSetParams& params)
-	{
-		return GSetLoader::LoadFromFile(this, filePath, params);
-	}*/
 
 	bool GraphicsSet::Initialize()
 	{
