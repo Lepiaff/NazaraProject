@@ -26,11 +26,17 @@ namespace NzP
 		template<class Archive>
 		void serialize(Archive& ar, const unsigned int version)
 		{
+			std::cout << "Serialize/Deserialize NodeComponent" << std::endl;
+
+			std::cout << "Serialize/Deserialize Base NodeComponent : " << std::endl;
 			BOOST_SERIALIZATION_BASE_OBJECT_NVP(Component);
 			ar & BOOST_SERIALIZATION_NVP(POSITION);
+			std::cout << "CollidableComponent _ POSITION : " << POSITION.first << " : " << POSITION.second << std::endl;
 			ar & BOOST_SERIALIZATION_NVP(SCALE);
+			std::cout << "CollidableComponent _ SCALE : " << SCALE.first << " : " << SCALE.second << std::endl;
 			ar & BOOST_SERIALIZATION_NVP(ROTATION);
-
+			std::cout << "CollidableComponent _ ROTATION : " << ROTATION << std::endl;
+			std::cout << "FIN Serialize/Deserialize NodeComponent " << std::endl;
 		}
 	public:
 		NodeComponent() : Component("NODE_COMPONENT") { ; }
@@ -39,8 +45,8 @@ namespace NzP
 		virtual void UpdateEntity(Ndk::EntityHandle entity) const override
 		{
 			Ndk::NodeComponent& nodeComponent = entity->AddComponent<Ndk::NodeComponent>();
-			nodeComponent.Move(POSITION.first, POSITION.second);
-			nodeComponent.Scale(SCALE.first, SCALE.second, 0);
+			nodeComponent.SetPosition(POSITION.first, POSITION.second);
+			nodeComponent.SetScale(SCALE.first, SCALE.second, 0);
 			nodeComponent.Rotate(Nz::EulerAnglesf(0.f, 0.f, ROTATION));
 		}
 

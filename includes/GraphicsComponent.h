@@ -29,37 +29,24 @@ namespace NzP
 		template<class Archive>
 		void serialize(Archive& ar, const unsigned int version)
 		{
+			std::cout << "Serialize/Deserialize GraphicsComponent" << std::endl;
+
+			std::cout << "Serialize/Deserialize Base GraphicsComponent : " << std::endl;
 			BOOST_SERIALIZATION_BASE_OBJECT_NVP(Component);
-			ar & BOOST_SERIALIZATION_NVP(RENDER_TYPE);	
+			std::cout << "Serialize/Deserialize Sprite de GraphicsComponent " << std::endl;
+			ar & BOOST_SERIALIZATION_NVP(SPRITE);
+			std::cout << "FIN Serialize/Deserialize GraphicsComponent " << std::endl;
 		}
 
+		boost::shared_ptr<Sprite> SPRITE;
 
-		/*friend class boost::serialization::access;
-		template<class Archive>
-		void save(Archive& ar, const unsigned int version) const
-		{
-			BOOST_SERIALIZATION_BASE_OBJECT_NVP(Component);
-			ar & BOOST_SERIALIZATION_NVP(RENDER_TYPE);
-		}
-
-		template<class Archive>
-		void load(Archive& ar, const unsigned int version)
-		{
-			BOOST_SERIALIZATION_BASE_OBJECT_NVP(Component);
-			ar & BOOST_SERIALIZATION_NVP(RENDER_TYPE);
-			BOOST_SERIALIZATION_BASE_OBJECT_NVP(Component);
-			Sprite* sprite;
-			ar & boost::serialization::make_nvp("SPRITE", sprite);
-			if (sprite) { RENDER_TYPE = boost::make_shared<Sprite>(*sprite); }
-		}
-		BOOST_SERIALIZATION_SPLIT_MEMBER()*/
 	public:
 		GraphicsComponent() : Component("GRAPHICS_COMPONENT") { ; }
 		virtual ~GraphicsComponent() = default;
 
 		virtual void Save(Ndk::BaseComponent* comp) override
 		{
-			/*Ndk::GraphicsComponent* graphicsComp = dynamic_cast<Ndk::GraphicsComponent*>(comp);
+			Ndk::GraphicsComponent* graphicsComp = dynamic_cast<Ndk::GraphicsComponent*>(comp);
 			Ndk::GraphicsComponent::RenderableList renderablesList;
 			graphicsComp->GetAttachedRenderables(&renderablesList);
 			for (auto renderable : renderablesList)
@@ -68,22 +55,21 @@ namespace NzP
 				if (sprite)
 				{
 					std::unique_ptr<Sprite> sprite = std::make_unique<Sprite>();
-					RENDER_TYPE = std::move(sprite);
-					RENDER_TYPE->Save(renderable);
+					SPRITE = std::move(sprite);
+					SPRITE->Save(renderable);
 				}
 
 				//idem pour le text ou autres renderables...
-			}*/
+			}
+
+
 		}
 
 		virtual void UpdateEntity(Ndk::EntityHandle entity) const override
 		{
-			/*Ndk::GraphicsComponent& graphicsComponent = entity->AddComponent<Ndk::GraphicsComponent>();
-			RENDER_TYPE->UpdateGraphicsComponent(graphicsComponent);*/
-		}
-
-	protected:
-		boost::shared_ptr<NzP::Renderable> RENDER_TYPE;
+			Ndk::GraphicsComponent& graphicsComponent = entity->AddComponent<Ndk::GraphicsComponent>();
+			SPRITE->UpdateGraphicsComponent(graphicsComponent);
+		}	
 	};
 }
 #endif // !GRAPHICSCOMPONENT_H

@@ -13,96 +13,90 @@
 		<item_version>0</item_version>
 		<item class_id="3" tracking_level="0" version="0">
 			<LAYER_ID>0</LAYER_ID>
-			<NB_COMPONENT>2</NB_COMPONENT>
-			<COMPONENT class_id="4" tracking_level="0" version="0">
-				<count>2</count>
-				<item_version>1</item_version>
-				<item class_id="5" tracking_level="0" version="1">
-					<px class_id="6" class_name="NODECOMPONENT" tracking_level="1" version="0" object_id="_0">
-						<POSITION>
-							<first>0.000000000e+00</first>
-							<second>0.000000000e+00</second>
-						</POSITION>
-						<SCALE>
-							<first>1.000000000e+00</first>
-							<second>1.000000000e+00</second>
-						</SCALE>
-						<ROTATION>0.000000000e+00</ROTATION>
-					</px>
-				</item>
-				<item>
-					<px class_id="7" class_name="GRAPHICSCOMPONENT" tracking_level="1" version="0" object_id="_1">
-						<RENDER_TYPE class_id="8" tracking_level="0" version="1">
-							<px class_id="9" class_name="SPRITE" tracking_level="1" version="0" object_id="_2">
-								<TEXTURE_NAME>D:/Programmation_2018/NazaraProject/NazaraProject/Ressources/Tilesets/32x32/Village.png</TEXTURE_NAME>
-								<ID_SPRITE>0</ID_SPRITE>
-							</px>
-						</RENDER_TYPE>
-					</px>
-				</item>
-			</COMPONENT>
+			<NODE_COMPONENT class_id="4" tracking_level="0" version="1">
+				<px class_id="5" tracking_level="1" version="0" object_id="_0">
+					<POSITION>
+						<first>0.000000000e+00</first>
+						<second>0.000000000e+00</second>
+					</POSITION>
+					<SCALE>
+						<first>1.000000000e+00</first>
+						<second>1.000000000e+00</second>
+					</SCALE>
+					<ROTATION>0.000000000e+00</ROTATION>
+				</px>
+			</NODE_COMPONENT>
+			<GRAPHICS_COMPONENT class_id="6" tracking_level="0" version="1">
+				<px class_id="7" tracking_level="1" version="0" object_id="_1">
+					<SPRITE class_id="8" tracking_level="0" version="1">
+						<px class_id="9" tracking_level="1" version="0" object_id="_2">
+							<TEXTURE_NAME>D:/Programmation_2018/NazaraProject/NazaraProject/Ressources/Tilesets/32x32/Village.png</TEXTURE_NAME>
+							<ID_SPRITE>0</ID_SPRITE>
+						</px>
+					</SPRITE>
+				</px>
+			</GRAPHICS_COMPONENT>
+			<COLLIDABLE_COMPONENT class_id="10" tracking_level="0" version="1">
+				<px class_id="-1"></px>
+			</COLLIDABLE_COMPONENT>
 		</item>
 		<item>
 			<LAYER_ID>0</LAYER_ID>
-			<NB_COMPONENT>2</NB_COMPONENT>
-			<COMPONENT>
-				<count>2</count>
-				<item_version>1</item_version>
-				<item>
-					<px class_id_reference="6" object_id="_3">
-						<POSITION>
-							<first>3.200000000e+01</first>
-							<second>0.000000000e+00</second>
-						</POSITION>
-						<SCALE>
-							<first>1.000000000e+00</first>
-							<second>1.000000000e+00</second>
-						</SCALE>
-						<ROTATION>0.000000000e+00</ROTATION>
-					</px>
-				</item>
-				<item>
-					<px class_id_reference="7" object_id="_4">
-						<RENDER_TYPE>
-							<px class_id_reference="9" object_id="_5">
-								<TEXTURE_NAME>D:/Programmation_2018/NazaraProject/NazaraProject/Ressources/Tilesets/32x32/Village.png</TEXTURE_NAME>
-								<ID_SPRITE>0</ID_SPRITE>
-							</px>
-						</RENDER_TYPE>
-					</px>
-				</item>
-			</COMPONENT>
+			<NODE_COMPONENT>
+				<px class_id_reference="5" object_id="_3">
+					<POSITION>
+						<first>3.200000000e+01</first>
+						<second>0.000000000e+00</second>
+					</POSITION>
+					<SCALE>
+						<first>1.000000000e+00</first>
+						<second>1.000000000e+00</second>
+					</SCALE>
+					<ROTATION>0.000000000e+00</ROTATION>
+				</px>
+			</NODE_COMPONENT>
+			<GRAPHICS_COMPONENT>
+				<px class_id_reference="7" object_id="_4">
+					<SPRITE>
+						<px class_id_reference="9" object_id="_5">
+							<TEXTURE_NAME>D:/Programmation_2018/NazaraProject/NazaraProject/Ressources/Tilesets/32x32/Village.png</TEXTURE_NAME>
+							<ID_SPRITE>0</ID_SPRITE>
+						</px>
+					</SPRITE>
+				</px>
+			</GRAPHICS_COMPONENT>
+			<COLLIDABLE_COMPONENT>
+				<px class_id="-1"></px>
+			</COLLIDABLE_COMPONENT>
 		</item>
 		<item>
 			<LAYER_ID>0</LAYER_ID>
-			<NB_COMPONENT>2</NB_COMPONENT>
-			<COMPONENT>
-				<count>2</count>
-				<item_version>1</item_version>
-				<item>
-					<px class_id_reference="6" object_id="_6">
-						<POSITION>
-							<first>6.400000000e+01</first>
-							<second>0.000000000e+00</second>
-						</POSITION>
-						<SCALE>
-							<first>1.000000000e+00</first>
-							<second>1.000000000e+00</second>
-						</SCALE>
-						<ROTATION>0.000000000e+00</ROTATION>
-					</px>
-				</item>
-				<item>
-					<px class_id_reference="7" object_id="_7">
-						<RENDER_TYPE>
-							<px class_id_reference="9" object_id="_8">
-								<TEXTURE_NAME>D:/Programmation_2018/NazaraProject/NazaraProject/Ressources/Tilesets/32x32/Village.png</TEXTURE_NAME>
-								<ID_SPRITE>0</ID_SPRITE>
-							</px>
-						</RENDER_TYPE>
-					</px>
-				</item>
-			</COMPONENT>
+			<NODE_COMPONENT>
+				<px class_id_reference="5" object_id="_6">
+					<POSITION>
+						<first>6.400000000e+01</first>
+						<second>0.000000000e+00</second>
+					</POSITION>
+					<SCALE>
+						<first>1.000000000e+00</first>
+						<second>1.000000000e+00</second>
+					</SCALE>
+					<ROTATION>0.000000000e+00</ROTATION>
+				</px>
+			</NODE_COMPONENT>
+			<GRAPHICS_COMPONENT>
+				<px class_id_reference="7" object_id="_7">
+					<SPRITE>
+						<px class_id_reference="9" object_id="_8">
+							<TEXTURE_NAME>D:/Programmation_2018/NazaraProject/NazaraProject/Ressources/Tilesets/32x32/Village.png</TEXTURE_NAME>
+							<ID_SPRITE>0</ID_SPRITE>
+						</px>
+					</SPRITE>
+				</px>
+			</GRAPHICS_COMPONENT>
+			<COLLIDABLE_COMPONENT>
+				<px class_id="-1"></px>
+			</COLLIDABLE_COMPONENT>
 		</item>
 	</ENTITIES>
 </MAP>

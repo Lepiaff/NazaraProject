@@ -120,20 +120,20 @@ namespace NzP
 						
 						Nz::String filePath{ "D:/Programmation_2018/NazaraProject/NazaraProject/Ressources/Tilesets/32x32/Village.png" };
 						
-						GraphicsSetParams params;
-						params.sizeTiles = { 32, 32 };
+						//GraphicsSetParams params;
+						//params.sizeTiles = { 32, 32 };
 
-						GSetManager::Register("Village", GraphicsSet::New(filePath, params));
+						//GSetManager::Register(filePath, GraphicsSet::New(filePath, params));
 
-						graphicsComponent->Attach(GSetManager::Get("Village")->GetSprite(idTile));
+						graphicsComponent->Attach(GSetManager::Get(filePath)->GetSprite(idTile));
 						break;
 				}
 			}
 			//On cache les entites
 			//m_maps[mapName].Display(false);
 
-			m_maps[mapName].Save();
-			SerializeMap(mapName);
+			//m_maps[mapName].Save();
+			//SerializeMap(mapName);
 			return true;
 		}
 		else
@@ -150,9 +150,10 @@ namespace NzP
 		if (fichier.is_open())
 		{
 			boost::archive::xml_iarchive iXMLArchive(fichier);
+			m_maps[mapName] = Map(&m_application, mapName);
 			Map& MAP = m_maps[mapName];
 			iXMLArchive >> BOOST_SERIALIZATION_NVP(MAP);
-			m_maps[mapName].Load();
+			MAP.Load();
 			return true;
 		}
 		else { return false; }

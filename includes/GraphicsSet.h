@@ -25,34 +25,32 @@
 
 namespace NzP
 {
-	struct GraphicsSetParams : public Nz::ResourceParameters 
+	struct GraphicsSetParams : public Nz::ResourceParameters
 	{
 		friend class GraphicsSet;
 		GraphicsSetParams() = default;
-
 		Nz::Vector2ui sizeTiles{ 0, 0 };
-		
-
 		bool IsValid() const; // vérifie que tous les paramètres sont présents et valide pour initialiser le Gset
-
 	private:
 		Nz::MaterialRef material;
 		std::vector<Nz::SpriteRef> spriteList;
 	};
 
 	class GraphicsSet;
-
+	
 	using GraphicsSetConstRef = Nz::ObjectRef<const GraphicsSet>;
-	using GSetLibrary = Nz::ObjectLibrary<GraphicsSet>;
+	//using GSetLibrary = Nz::ObjectLibrary<GraphicsSet>;
 	//using GSetLoader = Nz::ResourceLoader<GraphicsSet, GraphicsSetParams>;
 	using GSetManager = Nz::ResourceManager<GraphicsSet, GraphicsSetParams>;
 	using GraphicsSetRef = Nz::ObjectRef<GraphicsSet>;
 
-	struct GraphicsSetImpl {};
+	//struct GraphicsSetImpl {};
 
+
+	//Classe
 	class GraphicsSet : public Nz::RefCounted, public Nz::Resource
 	{
-		friend GSetLibrary;
+		//friend GSetLibrary;
 		//friend GSetLoader;
 		friend GSetManager;
 		friend class Utility;
@@ -94,14 +92,17 @@ namespace NzP
 		static bool Initialize();
 		static void Uninitialize();
 
-		Nz::MovablePtr<GraphicsSetImpl> m_impl = nullptr;
-
-		static GSetLibrary::LibraryMap s_library;
+		//Nz::MovablePtr<GraphicsSetImpl> m_impl = nullptr;
+		//static GSetLibrary::LibraryMap s_library;
 		//static GSetLoader::LoaderList s_loaders;
 		static GSetManager::ManagerMap s_managerMap;
 		static GSetManager::ManagerParams s_managerParameters;
 		
 	};
+
+
+	
+
 }
 #endif // GRAPHICSSET_H
 

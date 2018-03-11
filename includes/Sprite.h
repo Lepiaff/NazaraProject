@@ -22,16 +22,23 @@
 
 namespace NzP
 {
-	class Sprite : public NzP::Renderable
+	class Sprite : public Renderable
 	{
 	private:
 		friend class boost::serialization::access;
 		template<class Archive>
 		void serialize(Archive& ar, const unsigned int version)
 		{
+			std::cout << "Serialize/Deserialize Sprite" << std::endl;
+
+			std::cout << "Serialize/Deserialize Base Sprite : " << std::endl;
 			BOOST_SERIALIZATION_BASE_OBJECT_NVP(Renderable);
+
 			ar & BOOST_SERIALIZATION_NVP(TEXTURE_NAME);
+			std::cout << "Sprite _ TEXTURE_NAME : " << TEXTURE_NAME << std::endl;
 			ar & BOOST_SERIALIZATION_NVP(ID_SPRITE);
+			std::cout << "Sprite _ ID_SPRITE : " << ID_SPRITE << std::endl;
+			std::cout << "FIN Serialize/Deserialize Sprite " << std::endl;
 		}
 
 	public:
@@ -41,11 +48,10 @@ namespace NzP
 
 		virtual void UpdateGraphicsComponent(Ndk::GraphicsComponent& graphicsComponent)
 		{
-			if (GSetManager::Get(Nz::String(TEXTURE_NAME))->IsValid())
-			{
-				Nz::SpriteRef sprite = GSetManager::Get(Nz::String(TEXTURE_NAME))->GetSprite(ID_SPRITE);
-				graphicsComponent.Attach(sprite);
-			}	
+			//if (GSetManager::Get(/*Nz::String(*/TEXTURE_NAME/*)*/)->IsValid())
+			//{
+				graphicsComponent.Attach(GSetManager::Get(TEXTURE_NAME)->GetSprite(ID_SPRITE));
+			//}	
 		}
 
 		void Save(const Nz::InstancedRenderableRef& renderable)

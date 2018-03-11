@@ -34,10 +34,17 @@ namespace NzP
 		template<class Archive>
 		void serialize(Archive& ar, const unsigned int version)
 		{
+			std::cout << "Serialize/Deserialize Map" << std::endl;
 			ar & BOOST_SERIALIZATION_NVP(NAME);
+			std::cout << "Map _ NAME : " << NAME << std::endl;
 			ar & BOOST_SERIALIZATION_NVP(SIZE);
+			std::cout << "Map _ SIZE : " << SIZE.first <<" : " << SIZE.second << std::endl;
 			ar & BOOST_SERIALIZATION_NVP(NB_LAYERS);
+			std::cout << "Mapt _ NB_LAYERS : " << NB_LAYERS << std::endl;
+
+			std::cout << "Serialize/Deserialize Entity de Map " << std::endl;
 			ar & BOOST_SERIALIZATION_NVP(ENTITIES);
+			std::cout << "FIN Serialize/Deserialize Map " << std::endl;
 		}
 
 	public:

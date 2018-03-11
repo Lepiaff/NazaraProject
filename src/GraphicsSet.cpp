@@ -71,16 +71,17 @@ namespace NzP
 
 	bool GraphicsSet::IsValid() const
 	{
-		return m_impl != nullptr;
+		return true;
+		//return m_impl != nullptr;
 	}
 
 	bool GraphicsSet::Initialize()
 	{
-		if (!GSetLibrary::Initialize())
+		/*if (!GSetLibrary::Initialize())
 		{
 			NazaraError("Failed to initialise library");
 			return false;
-		}
+		}*/
 
 		if (!GSetManager::Initialize())
 		{
@@ -94,10 +95,10 @@ namespace NzP
 	void GraphicsSet::Uninitialize()
 	{
 		GSetManager::Uninitialize();
-		GSetLibrary::Uninitialize();
+		//GSetLibrary::Uninitialize();
 	}
 
-	GSetLibrary::LibraryMap GraphicsSet::s_library;
+	//GSetLibrary::LibraryMap GraphicsSet::s_library;
 	//GSetLoader::LoaderList GraphicsSet::s_loaders;
 	GSetManager::ManagerMap GraphicsSet::s_managerMap;
 	GSetManager::ManagerParams GraphicsSet::s_managerParameters;
