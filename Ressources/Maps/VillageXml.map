@@ -7,7 +7,7 @@
 		<first>8.000000000e+02</first>
 		<second>6.000000000e+02</second>
 	</SIZE>
-	<NB_LAYERS>3</NB_LAYERS>
+	<NB_LAYERS>1</NB_LAYERS>
 	<ENTITIES class_id="2" tracking_level="0" version="0">
 		<count>3</count>
 		<item_version>0</item_version>
@@ -31,7 +31,7 @@
 					<SPRITE class_id="8" tracking_level="0" version="1">
 						<px class_id="9" tracking_level="1" version="0" object_id="_2">
 							<TEXTURE_NAME>D:/Programmation_2018/NazaraProject/NazaraProject/Ressources/Tilesets/32x32/Village.png</TEXTURE_NAME>
-							<ID_SPRITE>0</ID_SPRITE>
+							<ID_SPRITE>12</ID_SPRITE>
 						</px>
 					</SPRITE>
 				</px>
@@ -60,7 +60,7 @@
 					<SPRITE>
 						<px class_id_reference="9" object_id="_5">
 							<TEXTURE_NAME>D:/Programmation_2018/NazaraProject/NazaraProject/Ressources/Tilesets/32x32/Village.png</TEXTURE_NAME>
-							<ID_SPRITE>0</ID_SPRITE>
+							<ID_SPRITE>12</ID_SPRITE>
 						</px>
 					</SPRITE>
 				</px>
@@ -89,7 +89,7 @@
 					<SPRITE>
 						<px class_id_reference="9" object_id="_8">
 							<TEXTURE_NAME>D:/Programmation_2018/NazaraProject/NazaraProject/Ressources/Tilesets/32x32/Village.png</TEXTURE_NAME>
-							<ID_SPRITE>0</ID_SPRITE>
+							<ID_SPRITE>12</ID_SPRITE>
 						</px>
 					</SPRITE>
 				</px>

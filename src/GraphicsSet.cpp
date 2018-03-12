@@ -17,7 +17,7 @@ namespace NzP
 
 	Nz::SpriteRef GraphicsSet::GetSprite(std::size_t idSprite)
 	{
-		return (idSprite < s_managerParameters.spriteList.size() ? s_managerParameters.spriteList[idSprite] : Nz::SpriteRef());
+		return (idSprite < spriteList.size() ? spriteList[idSprite] : Nz::SpriteRef());
 	}
 
 	bool GraphicsSet::LoadMaterial()
@@ -25,13 +25,13 @@ namespace NzP
 		if (!s_managerParameters.IsValid())
 			return false;
 
-		s_managerParameters.material = Nz::Material::New();
-		if (s_managerParameters.material->LoadFromFile(GetFilePath()))
+		material = Nz::Material::New();
+		if (material->LoadFromFile(GetFilePath()))
 		{
-			s_managerParameters.material->EnableBlending(true);
-			s_managerParameters.material->SetDstBlend(Nz::BlendFunc_InvSrcAlpha);
-			s_managerParameters.material->SetSrcBlend(Nz::BlendFunc_SrcAlpha);
-			s_managerParameters.material->EnableDepthWrite(false);
+			material->EnableBlending(true);
+			material->SetDstBlend(Nz::BlendFunc_InvSrcAlpha);
+			material->SetSrcBlend(Nz::BlendFunc_SrcAlpha);
+			material->EnableDepthWrite(false);
 
 			CreateSpriteList();
 
@@ -42,19 +42,19 @@ namespace NzP
 
 	void GraphicsSet::CreateSpriteList()
 	{
-		Nz::SpriteRef tempSprite = Nz::Sprite::New(s_managerParameters.material);
+		Nz::SpriteRef tempSprite = Nz::Sprite::New(material);
 		std::size_t nbTileHeight = static_cast<std::size_t>(tempSprite->GetSize().y / s_managerParameters.sizeTiles.y);
 		std::size_t nbTileWidth = static_cast<std::size_t>(tempSprite->GetSize().x / s_managerParameters.sizeTiles.x);
 
-		s_managerParameters.spriteList.clear(); //on initialiser la list pour être certain qu'elle est vide avant de la remplir
+		spriteList.clear(); //on initialiser la list pour être certain qu'elle est vide avant de la remplir
 		for (std::size_t j = 0; j < nbTileHeight; j++)
 		{
 			for (std::size_t i = 0; i < nbTileWidth; i++)
 			{
 				Nz::Rectui textureBox(i*s_managerParameters.sizeTiles.x, j*s_managerParameters.sizeTiles.y, s_managerParameters.sizeTiles.x, s_managerParameters.sizeTiles.y);
-				s_managerParameters.spriteList.emplace_back(Nz::Sprite::New(s_managerParameters.material));
-				s_managerParameters.spriteList.back()->SetTextureRect(textureBox);
-				s_managerParameters.spriteList.back()->SetSize(static_cast<Nz::Vector2f>(s_managerParameters.sizeTiles));
+				spriteList.emplace_back(Nz::Sprite::New(material));
+				spriteList.back()->SetTextureRect(textureBox);
+				spriteList.back()->SetSize(static_cast<Nz::Vector2f>(s_managerParameters.sizeTiles));
 			}
 		}
 	}
@@ -98,8 +98,31 @@ namespace NzP
 		//GSetLibrary::Uninitialize();
 	}
 
-	//GSetLibrary::LibraryMap GraphicsSet::s_library;
-	//GSetLoader::LoaderList GraphicsSet::s_loaders;
+	//Méthode de chargement de la ressource
+	//Dans ce cas-ci, appelle la méthode LoadMaterial pour charger la texture
+	bool GraphicsSet::LoadFromFile(const Nz::String& filePath, const GraphicsSetParams& params)
+	{
+		SetFilePath(filePath);
+		std::cout << "GraphicsSet / LoadFromFile : " << filePath << std::endl;
+		if (params.IsValid())
+			s_managerParameters = params;
+		if (!LoadMaterial())
+		{
+			std::cout << "GraphicsSet / LoadFromFile : Echec" << std::endl;
+			return false;
+		}
+		std::cout << "GraphicsSet / LoadFromFile : Done" << std::endl;
+		GSetManager::Register(filePath, this);
+		std::cout << "GraphicsSet registered" << std::endl;
+		return true;
+	}
+
+
+
+
+	GSetLibrary::LibraryMap GraphicsSet::s_library;
+	GSetLoader::LoaderList GraphicsSet::s_loaders;
 	GSetManager::ManagerMap GraphicsSet::s_managerMap;
 	GSetManager::ManagerParams GraphicsSet::s_managerParameters;
 }
+

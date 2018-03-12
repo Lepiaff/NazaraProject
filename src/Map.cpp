@@ -2,13 +2,12 @@
 
 namespace NzP
 {
-	Map::Map(Ndk::Application * app, std::string name, const unsigned int nbLayer) : m_application(app), NAME(name), NB_LAYERS(nbLayer)
+	Map::Map(Ndk::Application * app, std::string name) : m_application(app), NAME(name)
 	{
-		CreateLayers(nbLayer);
-	}
-	Map::Map(Ndk::Application* app) : m_application(app)
-	{
-		
+		SIZE.first = 0;
+		SIZE.second = 0;
+		NB_LAYERS = 0;
+		ENTITIES.clear();
 	}
 
 	bool Map::Load()
@@ -56,7 +55,9 @@ namespace NzP
 
 	void Map::CreateLayers(const unsigned int nbLayers)
 	{
-		for (unsigned int i = 0; i < nbLayers; i++) {}
+		for (unsigned int i = 0; i < nbLayers; i++)
+		{
 			m_layerList.emplace_back(&m_application->AddWorld());
+		}
 	}
 }

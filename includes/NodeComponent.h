@@ -45,9 +45,9 @@ namespace NzP
 		virtual void UpdateEntity(Ndk::EntityHandle entity) const override
 		{
 			Ndk::NodeComponent& nodeComponent = entity->AddComponent<Ndk::NodeComponent>();
-			nodeComponent.SetPosition(POSITION.first, POSITION.second);
-			nodeComponent.SetScale(SCALE.first, SCALE.second, 0);
-			nodeComponent.Rotate(Nz::EulerAnglesf(0.f, 0.f, ROTATION));
+			nodeComponent.SetPosition(POSITION.first, POSITION.second, 0);
+			//nodeComponent.SetScale(SCALE.first, SCALE.second, 0);
+			//nodeComponent.Rotate(Nz::EulerAnglesf(0.f, 0.f, ROTATION));
 		}
 
 		virtual void Save(Ndk::BaseComponent* comp) override

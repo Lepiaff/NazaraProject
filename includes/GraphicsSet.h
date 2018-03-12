@@ -29,29 +29,26 @@ namespace NzP
 	{
 		friend class GraphicsSet;
 		GraphicsSetParams() = default;
-		Nz::Vector2ui sizeTiles{ 0, 0 };
+		Nz::Vector2ui sizeTiles{32, 32 };
 		bool IsValid() const; // vérifie que tous les paramètres sont présents et valide pour initialiser le Gset
-	private:
-		Nz::MaterialRef material;
-		std::vector<Nz::SpriteRef> spriteList;
 	};
 
 	class GraphicsSet;
 	
 	using GraphicsSetConstRef = Nz::ObjectRef<const GraphicsSet>;
-	//using GSetLibrary = Nz::ObjectLibrary<GraphicsSet>;
-	//using GSetLoader = Nz::ResourceLoader<GraphicsSet, GraphicsSetParams>;
+	using GSetLibrary = Nz::ObjectLibrary<GraphicsSet>;
+	using GSetLoader = Nz::ResourceLoader<GraphicsSet, GraphicsSetParams>;
 	using GSetManager = Nz::ResourceManager<GraphicsSet, GraphicsSetParams>;
 	using GraphicsSetRef = Nz::ObjectRef<GraphicsSet>;
 
-	//struct GraphicsSetImpl {};
+	struct GraphicsSetImpl {};
 
 
 	//Classe
 	class GraphicsSet : public Nz::RefCounted, public Nz::Resource
 	{
-		//friend GSetLibrary;
-		//friend GSetLoader;
+		friend GSetLibrary;
+		friend GSetLoader;
 		friend GSetManager;
 		friend class Utility;
 
@@ -61,17 +58,10 @@ namespace NzP
 		~GraphicsSet() = default;
 
 		Nz::SpriteRef GetSprite(std::size_t idSprite);
-		std::vector<Nz::SpriteRef>& GetSpriteList() { return s_managerParameters.spriteList; }
-
+		std::vector<Nz::SpriteRef>& GetSpriteList() { return spriteList; }
 		unsigned int GetSpriteId(Nz::Rectf textureRect);
 
-		//bool LoadFromFile(const Nz::String& filePath, const GraphicsSetParams& params);
-		bool LoadFromFile(const Nz::String& filePath, const GraphicsSetParams& params = GraphicsSetParams())
-		{
-			s_managerParameters = params;
-			return LoadMaterial();
-		}
-
+		
 		bool IsValid() const;
 
 		template<typename... Args>
@@ -84,6 +74,8 @@ namespace NzP
 		}
 
 	private:
+		bool LoadFromFile(const Nz::String& filePath, const GraphicsSetParams& params = GSetManager::GetDefaultParameters());
+
 		bool LoadMaterial();
 		void CreateSpriteList();
 
@@ -92,12 +84,15 @@ namespace NzP
 		static bool Initialize();
 		static void Uninitialize();
 
-		//Nz::MovablePtr<GraphicsSetImpl> m_impl = nullptr;
-		//static GSetLibrary::LibraryMap s_library;
-		//static GSetLoader::LoaderList s_loaders;
+		Nz::MovablePtr<GraphicsSetImpl> m_impl = nullptr;
+		static GSetLibrary::LibraryMap s_library;
+		static GSetLoader::LoaderList s_loaders;
 		static GSetManager::ManagerMap s_managerMap;
 		static GSetManager::ManagerParams s_managerParameters;
 		
+		//Attributs
+		Nz::MaterialRef material;
+		std::vector<Nz::SpriteRef> spriteList;
 	};
 
 

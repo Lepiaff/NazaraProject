@@ -55,23 +55,15 @@ namespace NzP
 
 		void CreateEntity(std::vector<Ndk::WorldHandle>& wolrdList, std::vector<Ndk::EntityHandle>& entityList)
 		{
+			entityList.emplace_back(wolrdList[LAYER_ID]->CreateEntity());
 			if (NODE_COMPONENT)
-			{
-				entityList.emplace_back(wolrdList[LAYER_ID]->CreateEntity());
 				NODE_COMPONENT->UpdateEntity(entityList.back());
-			}
 
 			if (GRAPHICS_COMPONENT)
-			{
-				entityList.emplace_back(wolrdList[LAYER_ID]->CreateEntity());
 				GRAPHICS_COMPONENT->UpdateEntity(entityList.back());
-			}
 
 			if (COLLIDABLE_COMPONENT)
-			{
-				entityList.emplace_back(wolrdList[LAYER_ID]->CreateEntity());
 				COLLIDABLE_COMPONENT->UpdateEntity(entityList.back());
-			}
 		}
 
 		void SaveEntity(const Ndk::EntityHandle& entityHandle)

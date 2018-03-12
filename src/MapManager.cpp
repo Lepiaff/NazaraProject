@@ -30,7 +30,7 @@ namespace NzP
 
 	bool MapManager::SerializeMap(const std::string& mapName)
 	{
-		fs::path mapPath = m_folderMap + "/" + mapName + "Xml.map";
+		fs::path mapPath = m_folderMap + "/" + mapName + "XmlFullSize.map";
 		std::ofstream fichier(mapPath.c_str());
 		boost::archive::xml_oarchive oXMLArchive(fichier);
 
@@ -62,7 +62,7 @@ namespace NzP
 		return true;*/
 
 		///Load map.txt
-		/*fs::path mapPath = m_folderMap + "/" + mapName + "Text.map";
+		fs::path mapPath = m_folderMap + "/" + mapName + "TextFullSize.map";
 		std::ifstream fichier(mapPath.c_str());
 
 		if (fichier)
@@ -73,8 +73,9 @@ namespace NzP
 			//On a forcement le nombre de layer en premier
 			unsigned int i = 0;
 			fichier >> i;
-			m_maps[mapName] = Map(&m_application, mapName, i);
-			
+			m_maps[mapName] = Map(&m_application, mapName);
+			m_maps[mapName].CreateLayers(i);
+
 			Nz::Vector2f size;
 			float size_;
 			fichier >> size_;
@@ -112,9 +113,9 @@ namespace NzP
 
 					case 'G':
 						graphicsComponent = &currentEntity->AddComponent<Ndk::GraphicsComponent>();
-						m_maps[mapName].AddComponentType("SPRITE_COMPONENT");
-						m_maps[mapName].AddIdTile(0);
-						m_maps[mapName].AddTextureName(mapName);
+						//m_maps[mapName].AddComponentType("SPRITE_COMPONENT");
+						//m_maps[mapName].AddIdTile(0);
+						//m_maps[mapName].AddTextureName(mapName);
 						fichier >> nameGraphicsSet;
 						fichier >> idTile;
 						
@@ -140,11 +141,11 @@ namespace NzP
 		{
 			std::cout <<"Map inexistante." << std::endl;
 			return false;
-		}*/
+		}
 
 
 		///Test serialisation!!!!!!!!!!!!!!!
-		fs::path mapPath = m_folderMap + "/" + mapName + "Xml.map";
+		/*fs::path mapPath = m_folderMap + "/" + mapName + "XmlFullSize.map";
 		std::ifstream fichier(mapPath.c_str());
 
 		if (fichier.is_open())
@@ -156,7 +157,7 @@ namespace NzP
 			MAP.Load();
 			return true;
 		}
-		else { return false; }
+		else { return false; }*/
 
 	}
 

@@ -48,12 +48,7 @@ int main()
 	Ndk::StateMachine monInstance{ s_states.mainStates.menuState };
 
 	///test///
-	NzP::GraphicsSetParams params;
-	params.sizeTiles = { 32, 32 };
 	std::string texturePath = "D:/Programmation_2018/NazaraProject/NazaraProject/Ressources/Tilesets/32x32/Village.png";
-	NzP::GSetManager::Register(texturePath, NzP::GraphicsSet::New(texturePath, params));
-
-
 	NzP::MapManager mapManager(application);
 	
 	if (mapManager.LoadMap("Village"))

@@ -49,8 +49,7 @@ namespace NzP
 
 	public:
 		Map() = default;
-		Map(Ndk::Application* app, std::string name, const unsigned int nbLayer = 1);
-		Map(Ndk::Application* app);
+		Map(Ndk::Application* app, std::string name);
 		~Map() = default;
 
 		bool Load();
@@ -85,15 +84,15 @@ namespace NzP
 
 		const std::vector<std::string>& GetComponentsType() const { return m_componentsType; }
 		void SetComponentsType(std::vector<std::string> componentsType) { m_componentsType = std::move(componentsType); }
-		void AddComponentType(std::string nameComponentType) { m_componentsType.emplace_back(std::move(nameComponentType)); }
+		//void AddComponentType(std::string nameComponentType) { m_componentsType.emplace_back(std::move(nameComponentType)); }
 
 		const std::vector<unsigned int>& GetIdTiles() const { return m_idTiles; }
 		void SetIdTiles(std::vector<unsigned int> idtiles) { m_idTiles = std::move(idtiles); }
-		void AddIdTile(unsigned int idTile) { m_idTiles.emplace_back(std::move(idTile)); }
+		//void AddIdTile(unsigned int idTile) { m_idTiles.emplace_back(std::move(idTile)); }
 
 		const std::vector<std::string>& GetTextureNames() const { return m_textureNames; }
 		void SetTextureNames(std::vector<std::string> textureNames) { m_textureNames = std::move(textureNames); }
-		void AddTextureName(std::string textureName) { m_textureNames.emplace_back(std::move(textureName)); }
+		//void AddTextureName(std::string textureName) { m_textureNames.emplace_back(std::move(textureName)); }
 
 	protected:
 

@@ -48,10 +48,7 @@ namespace NzP
 
 		virtual void UpdateGraphicsComponent(Ndk::GraphicsComponent& graphicsComponent)
 		{
-			//if (GSetManager::Get(/*Nz::String(*/TEXTURE_NAME/*)*/)->IsValid())
-			//{
-				graphicsComponent.Attach(GSetManager::Get(TEXTURE_NAME)->GetSprite(ID_SPRITE));
-			//}	
+			graphicsComponent.Attach(GSetManager::Get(TEXTURE_NAME)->GetSprite(ID_SPRITE));
 		}
 
 		void Save(const Nz::InstancedRenderableRef& renderable)

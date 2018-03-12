@@ -19,7 +19,7 @@ namespace NzP
 
 	bool GameState::Update(Ndk::StateMachine& fsm, float elapsedTime)
 	{
-		if (m_elapsedTime >= 30)
+		if (m_elapsedTime >= 5)
 		{
 			m_elapsedTime = 0;
 			fsm.ChangeState(m_states.mainStates.menuState);
