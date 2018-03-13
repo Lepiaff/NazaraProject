@@ -16,7 +16,7 @@ namespace NzP
 		void serialize(Archive& ar, const unsigned int version)
 		{
 			std::cout << "Serialize/Deserialize Renderable" << std::endl;
-			ar & BOOST_SERIALIZATION_NVP(RENDER_NAME);
+			ar & RENDER_NAME;
 			std::cout << "Renderable _ RENDER_NAME : " << RENDER_NAME << std::endl;
 		}
 

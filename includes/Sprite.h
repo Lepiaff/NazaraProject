@@ -28,15 +28,15 @@ namespace NzP
 		friend class boost::serialization::access;
 		template<class Archive>
 		void serialize(Archive& ar, const unsigned int version)
-		{
+		{///////////////////////////////////////////////////////////////////////////////////////////Au bout du 7/9ieme, ca crash !!!!!
 			std::cout << "Serialize/Deserialize Sprite" << std::endl;
 
 			std::cout << "Serialize/Deserialize Base Sprite : " << std::endl;
-			BOOST_SERIALIZATION_BASE_OBJECT_NVP(Renderable);
+			ar & boost::serialization::base_object<Renderable>(*this);
 
-			ar & BOOST_SERIALIZATION_NVP(TEXTURE_NAME);
+			ar & TEXTURE_NAME;
 			std::cout << "Sprite _ TEXTURE_NAME : " << TEXTURE_NAME << std::endl;
-			ar & BOOST_SERIALIZATION_NVP(ID_SPRITE);
+			ar & ID_SPRITE;
 			std::cout << "Sprite _ ID_SPRITE : " << ID_SPRITE << std::endl;
 			std::cout << "FIN Serialize/Deserialize Sprite " << std::endl;
 		}

@@ -27,7 +27,7 @@ namespace NzP
 		void serialize(Archive& ar, const unsigned int version)
 		{
 			std::cout << "Serialize/Deserialize Component" << std::endl;
-			ar & BOOST_SERIALIZATION_NVP(TYPE);
+			ar & TYPE;
 			std::cout << "Component _ TYPE : " << TYPE << std::endl;
 			std::cout << "FIN Serialize/Deserialize Component " << std::endl;
 		}

@@ -32,9 +32,9 @@ namespace NzP
 			std::cout << "Serialize/Deserialize GraphicsComponent" << std::endl;
 
 			std::cout << "Serialize/Deserialize Base GraphicsComponent : " << std::endl;
-			BOOST_SERIALIZATION_BASE_OBJECT_NVP(Component);
+			ar & boost::serialization::base_object<Component>(*this);
 			std::cout << "Serialize/Deserialize Sprite de GraphicsComponent " << std::endl;
-			ar & BOOST_SERIALIZATION_NVP(SPRITE);
+			ar & SPRITE;
 			std::cout << "FIN Serialize/Deserialize GraphicsComponent " << std::endl;
 		}
 

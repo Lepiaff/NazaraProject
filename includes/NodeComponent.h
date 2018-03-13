@@ -7,7 +7,6 @@
 #include <boost/serialization/access.hpp>
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/serialization.hpp>
-#include <boost/archive/xml_oarchive.hpp>
 #include <boost/serialization/export.hpp>
 #include <boost/serialization/utility.hpp>
 #include <boost/serialization/shared_ptr.hpp>
@@ -29,12 +28,12 @@ namespace NzP
 			std::cout << "Serialize/Deserialize NodeComponent" << std::endl;
 
 			std::cout << "Serialize/Deserialize Base NodeComponent : " << std::endl;
-			BOOST_SERIALIZATION_BASE_OBJECT_NVP(Component);
-			ar & BOOST_SERIALIZATION_NVP(POSITION);
+			ar & boost::serialization::base_object<Component>(*this);
+			ar & POSITION;
 			std::cout << "CollidableComponent _ POSITION : " << POSITION.first << " : " << POSITION.second << std::endl;
-			ar & BOOST_SERIALIZATION_NVP(SCALE);
+			ar & SCALE;
 			std::cout << "CollidableComponent _ SCALE : " << SCALE.first << " : " << SCALE.second << std::endl;
-			ar & BOOST_SERIALIZATION_NVP(ROTATION);
+			ar & ROTATION;
 			std::cout << "CollidableComponent _ ROTATION : " << ROTATION << std::endl;
 			std::cout << "FIN Serialize/Deserialize NodeComponent " << std::endl;
 		}
@@ -46,8 +45,8 @@ namespace NzP
 		{
 			Ndk::NodeComponent& nodeComponent = entity->AddComponent<Ndk::NodeComponent>();
 			nodeComponent.SetPosition(POSITION.first, POSITION.second, 0);
-			//nodeComponent.SetScale(SCALE.first, SCALE.second, 0);
-			//nodeComponent.Rotate(Nz::EulerAnglesf(0.f, 0.f, ROTATION));
+			nodeComponent.SetScale(SCALE.first, SCALE.second, 0);
+			nodeComponent.Rotate(Nz::EulerAnglesf(0.f, 0.f, ROTATION));
 		}
 
 		virtual void Save(Ndk::BaseComponent* comp) override

@@ -55,7 +55,8 @@ namespace NzP
 
 	void Map::CreateLayers(const unsigned int nbLayers)
 	{
-		for (unsigned int i = 0; i < nbLayers; i++)
+		NB_LAYERS = nbLayers;
+		for (unsigned int i = 0; i < NB_LAYERS; i++)
 		{
 			m_layerList.emplace_back(&m_application->AddWorld());
 		}

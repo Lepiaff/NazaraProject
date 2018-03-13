@@ -30,15 +30,15 @@ namespace NzP
 
 	bool MapManager::SerializeMap(const std::string& mapName)
 	{
-		fs::path mapPath = m_folderMap + "/" + mapName + "XmlFullSize.map";
+		fs::path mapPath = m_folderMap + "/" + mapName + "BinaryFullSize.map";
 		std::ofstream fichier(mapPath.c_str());
-		boost::archive::xml_oarchive oXMLArchive(fichier);
-
+		//boost::archive::xml_oarchive oXMLArchive(fichier);
+		boost::archive::binary_oarchive oBinArchive(fichier);
 		NzP::Map& MAP = m_maps[mapName];
 
 		if (fichier)
 		{
-			oXMLArchive << BOOST_SERIALIZATION_NVP(MAP);
+			oBinArchive << MAP;
 			return true;
 		}
 		return false;
@@ -62,7 +62,7 @@ namespace NzP
 		return true;*/
 
 		///Load map.txt
-		fs::path mapPath = m_folderMap + "/" + mapName + "TextFullSize.map";
+		/*fs::path mapPath = m_folderMap + "/" + mapName + "TextFullSize.map";
 		std::ifstream fichier(mapPath.c_str());
 
 		if (fichier)
@@ -133,31 +133,32 @@ namespace NzP
 			//On cache les entites
 			//m_maps[mapName].Display(false);
 
-			//m_maps[mapName].Save();
-			//SerializeMap(mapName);
+			m_maps[mapName].Save();
+			SerializeMap(mapName);
 			return true;
 		}
 		else
 		{
 			std::cout <<"Map inexistante." << std::endl;
 			return false;
-		}
+		}*/
 
 
 		///Test serialisation!!!!!!!!!!!!!!!
-		/*fs::path mapPath = m_folderMap + "/" + mapName + "XmlFullSize.map";
+		fs::path mapPath = m_folderMap + "/" + mapName + "BinaryFullSize.map";
 		std::ifstream fichier(mapPath.c_str());
 
 		if (fichier.is_open())
 		{
-			boost::archive::xml_iarchive iXMLArchive(fichier);
+			//boost::archive::xml_iarchive iXMLArchive(fichier);
+			boost::archive::binary_iarchive iBinArchive(fichier);
 			m_maps[mapName] = Map(&m_application, mapName);
 			Map& MAP = m_maps[mapName];
-			iXMLArchive >> BOOST_SERIALIZATION_NVP(MAP);
+			iBinArchive >> MAP;
 			MAP.Load();
 			return true;
 		}
-		else { return false; }*/
+		else { return false; }
 
 	}
 

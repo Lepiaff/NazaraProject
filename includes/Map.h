@@ -3,13 +3,13 @@
 #ifndef MAP_H
 #define MAP_H
 
-
 #include <string>
 #include <vector>
 
 #include <boost/serialization/version.hpp>
 #include <boost/serialization/split_free.hpp>
-#include <boost/archive/xml_oarchive.hpp>
+#include <boost/archive/binary_iarchive.hpp>
+#include <boost/archive/binary_oarchive.hpp>
 #include <boost/serialization/serialization.hpp>
 #include <boost/serialization/string.hpp>
 #include <boost/serialization/collection_size_type.hpp>
@@ -35,15 +35,15 @@ namespace NzP
 		void serialize(Archive& ar, const unsigned int version)
 		{
 			std::cout << "Serialize/Deserialize Map" << std::endl;
-			ar & BOOST_SERIALIZATION_NVP(NAME);
+			ar & NAME;
 			std::cout << "Map _ NAME : " << NAME << std::endl;
-			ar & BOOST_SERIALIZATION_NVP(SIZE);
+			ar & SIZE;
 			std::cout << "Map _ SIZE : " << SIZE.first <<" : " << SIZE.second << std::endl;
-			ar & BOOST_SERIALIZATION_NVP(NB_LAYERS);
+			ar & NB_LAYERS;
 			std::cout << "Mapt _ NB_LAYERS : " << NB_LAYERS << std::endl;
 
 			std::cout << "Serialize/Deserialize Entity de Map " << std::endl;
-			ar & BOOST_SERIALIZATION_NVP(ENTITIES);
+			ar & ENTITIES;
 			std::cout << "FIN Serialize/Deserialize Map " << std::endl;
 		}
 

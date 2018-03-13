@@ -5,7 +5,6 @@
 
 #include <boost/serialization/access.hpp>
 #include <boost/serialization/base_object.hpp>
-#include <boost/archive/xml_oarchive.hpp>
 #include <boost/serialization/export.hpp>
 #include <boost/serialization/shared_ptr.hpp>
 
@@ -26,10 +25,10 @@ namespace NzP
 			std::cout << "Serialize/Deserialize CollidableComponent" << std::endl;
 
 			std::cout << "Serialize/Deserialize Base CollidableComponent : " << std::endl;
-			BOOST_SERIALIZATION_BASE_OBJECT_NVP(Component);
-			ar & BOOST_SERIALIZATION_NVP(POSITION);
+			ar & boost::serialization::base_object<Component>(*this);
+			ar & POSITION;
 			std::cout << "CollidableComponent _ POSITION : " << POSITION << std::endl;
-			ar & BOOST_SERIALIZATION_NVP(TAILLE);
+			ar & TAILLE;
 			std::cout << "CollidableComponent _ TAILLE : " << TAILLE << std::endl;
 			std::cout << "FIN Serialize/Deserialize CollidableComponent " << std::endl;
 		}
