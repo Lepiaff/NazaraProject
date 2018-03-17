@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <memory>
 #include <utility>
+#include <sstream>
 
 #include <Nazara/Core/MovablePtr.hpp>
 #include <Nazara/Graphics/Sprite.hpp>
@@ -22,72 +23,56 @@
 #include <Nazara/Core/ObjectLibrary.hpp>
 #include <Nazara/Core/ResourceLoader.hpp>
 
-
 namespace NzP
 {
-	struct GraphicsSetParams : public Nz::ResourceParameters
-	{
-		friend class GraphicsSet;
-		GraphicsSetParams() = default;
-		Nz::Vector2ui sizeTiles{ 32, 32 };
-		bool IsValid() const; // vérifie que tous les paramètres sont présents et valide pour initialiser le Gset
-	};
-
+	///déclarations
+	struct GraphicsSetParams;
 	class GraphicsSet;
-	
 	using GraphicsSetConstRef = Nz::ObjectRef<const GraphicsSet>;
 	using GSetManager = Nz::ResourceManager<GraphicsSet, GraphicsSetParams>;
 	using GraphicsSetRef = Nz::ObjectRef<GraphicsSet>;
-
-	struct GraphicsSetImpl {};
 
 	class GraphicsSet : public Nz::RefCounted, public Nz::Resource
 	{
 		friend GSetManager;
 		friend class Utility;
 
-	public:
-		GraphicsSet()
-		{
-			Initialize();
-		}
-		
-		GraphicsSet(const Nz::String& filePath, const GraphicsSetParams& params = GraphicsSetParams());
-		~GraphicsSet()
-		{
-			Uninitialize();
-		}
+	private:
+		///Attributes
+		static GSetManager::ManagerMap s_managerMap;
+		static GSetManager::ManagerParams s_managerParameters;
+		Nz::MaterialRef m_material;
 
-		Nz::SpriteRef GetSprite(std::size_t idSprite);
+		///Méthodes privées
 		Nz::SpriteRef CreateSprite(std::size_t idSprite);
-		unsigned int GetSpriteId(Nz::Vector2f pos);
+		bool LoadFromFile(const Nz::String& filePath, const GraphicsSetParams& params = GSetManager::GetDefaultParameters());
+		bool LoadMaterial();
 		
+	public:
+		GraphicsSet() = default;
+		~GraphicsSet() = default;
+
+		///Méthodes publiques
+		Nz::SpriteRef GetSprite(std::size_t idSprite);
+		unsigned int GetSpriteId(Nz::Vector2f pos);
 		bool IsValid() const;
 
 		template<typename... Args>
 		static GraphicsSetRef New(Args&&... args)
 		{
-			//std::unique_ptr<GraphicsSet> object(new GraphicsSet(std::forward<Args>(args)...));
-			std::unique_ptr<GraphicsSet> object(std::make_unique<GraphicsSet>(std::forward<Args>(args)...));
+			auto object(std::make_unique<GraphicsSet>(std::forward<Args>(args)...));
 			object->SetPersistent(false);
 
 			return object.release();
 		}
+	};
 
-	private:
-		bool LoadFromFile(const Nz::String& filePath, const GraphicsSetParams& params = GSetManager::GetDefaultParameters());
-
-		bool LoadMaterial();
-
-		static bool Initialize();
-		static void Uninitialize();
-
-		Nz::MovablePtr<GraphicsSetImpl> m_impl = nullptr;
-		static GSetManager::ManagerMap s_managerMap;
-		static GSetManager::ManagerParams s_managerParameters;
-		
-		Nz::MaterialRef m_material;
+	struct GraphicsSetParams : public Nz::ResourceParameters
+	{
+		friend class GraphicsSet;
+		GraphicsSetParams() = default;
+		Nz::Vector2ui sizeTiles{ 32, 32 };
+		bool IsValid() const; /// vérifie que tous les paramètres sont présents et valide pour initialiser le Gset
 	};
 }
 #endif // GRAPHICSSET_H
-

@@ -45,13 +45,10 @@ int main()
 		
 	Ndk::StateMachine monInstance{ s_states.mainStates.menuState };
 
-//	NzP::GSetManager::Get("D:/Programmation_2018/NazaraProject/NazaraProject/Ressources/Tilesets/32x32/Village.jpg");
-
 	///test///
-	std::string mapPath = "D:/Programmation_2018/NazaraProject/NazaraProject/Ressources/Maps/VillageBinary.map";
+	std::string mapPath = "D:/Programmation_2018/NazaraProject/NazaraProject/Ressources/Maps/VillageBinaryFullSize.map";
+	s_states.mainStates.gameState->SetMap(mapPath);
 
-	s_states.mainStates.gameState->SetMap(NzP::MapManager::Get(mapPath));
-	//NzP::MapManager::Get(mapPath)->SaveMapState();
 	///end///
 
 		while (application.Run())
@@ -62,5 +59,6 @@ int main()
 				return EXIT_FAILURE; // EXIT_SUCCESS si c'est juste la fin du jeu 
 			}
 		}
+
 	return EXIT_SUCCESS;
 }

@@ -6,7 +6,6 @@ namespace NzP
 	Map::Map(const Nz::String& filePath, const MapParams& params) : NAME(filePath.ToStdString())
 	{
 		SetFilePath(filePath);
-		//m_application = Ndk::Application::Instance();
 		SIZE.first = 0;
 		SIZE.second = 0;
 		NB_LAYERS = 0;
@@ -25,8 +24,8 @@ namespace NzP
 			return false;
 		}
 		std::cout << "Map / LoadFromFile : Done" << std::endl;
-		MapManager::Register(filePath, this);
-		std::cout << "Map registered" << std::endl;
+		//MapManager::Register(filePath, this);
+		//std::cout << "Map registered" << std::endl;
 		return true;
 	}
 	bool Map::Deserialize()
@@ -64,9 +63,7 @@ namespace NzP
 		CreateLayers(NB_LAYERS);//J'instancie autant de world qu'il y a de layer à ma map
 
 		for (auto entity : ENTITIES)//Je créé les entités
-		{
 			entity.CreateEntity(m_layerList, m_entities);
-		}
 		return true;
 	}
 
@@ -93,13 +90,9 @@ namespace NzP
 		for (auto entity : m_entities)
 		{
 			if (state)
-			{
 				entity->Enable();
-			}
 			else
-			{
 				entity->Disable();
-			}
 		}
 	}
 
@@ -107,16 +100,13 @@ namespace NzP
 	{
 		NB_LAYERS = nbLayers;
 		for (unsigned int i = 0; i < NB_LAYERS; i++)
-		{
 			m_layerList.emplace_back(&Ndk::Application::Instance()->AddWorld());
-		}
 	}
 
 	bool MapParams::IsValid() const
 	{
 		if(size.x > 0 && size.y > 0)
 			return true;
-
 		return false;
 	}
 

@@ -14,7 +14,6 @@ namespace NzP
 
 	void GameState::Leave(Ndk::StateMachine& fsm)
 	{
-		//m_currentMap->RemoveReference();
 		DisplayMap(false);
 	}
 
@@ -33,17 +32,23 @@ namespace NzP
 		return true;
 	}
 
-	bool GameState::SetMap(NzP::MapRef map)
+	bool GameState::SetMap(std::string mapPath)
 	{
-		m_currentMap = map;
+		if (m_currentMap)
+		{
+			m_currentMap->SetPersistent(false);
+			m_currentMap->RemoveReference();
+		}
+		m_currentMap = NzP::MapManager::Get(mapPath);
+		m_currentMap->SetPersistent(true);
 
 		for (auto layer : m_currentMap->GetLayers())
 		{
 			m_viewList.emplace_back(layer->CreateEntity());
 
 			///////////Préparation de la fenetre///////////
-			Ndk::NodeComponent & nodecomponant = m_viewList.back()->AddComponent<Ndk::NodeComponent>();
-			Ndk::CameraComponent & cameraComponant = m_viewList.back()->AddComponent<Ndk::CameraComponent>();
+			Ndk::NodeComponent& nodecomponant = m_viewList.back()->AddComponent<Ndk::NodeComponent>();
+			Ndk::CameraComponent& cameraComponant = m_viewList.back()->AddComponent<Ndk::CameraComponent>();
 			cameraComponant.SetTarget(&m_renderWindow);
 
 			cameraComponant.SetProjectionType(Nz::ProjectionType_Orthogonal);
@@ -62,12 +67,9 @@ namespace NzP
 		for (auto view : m_viewList)
 		{
 			if (state)
-			{
 				view->Enable();
-			}
-			else {
+			else
 				view->Disable();
-			}
 		}
 		//m_currentMap->Display(state); // désactive chaque entité de la map....
 	}
@@ -75,12 +77,8 @@ namespace NzP
 	void GameState::DisplayLayer(const unsigned int layer, bool display)
 	{
 		if (display)
-		{
 			m_viewList[layer]->Enable();
-		}
-		else {
+		else
 			m_viewList[layer]->Disable();
-		}
-
 	}
 }

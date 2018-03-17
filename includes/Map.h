@@ -95,6 +95,7 @@ namespace NzP
 
 		// Autres variables
 		std::vector<unsigned int> m_LayerByEntity;
+		std::vector<Nz::SpriteRef> m_GSets;
 		std::vector<Ndk::EntityHandle> m_entities;
 
 		std::vector<Ndk::WorldHandle> m_layerList;
@@ -117,14 +118,13 @@ namespace NzP
 		template<typename... Args>
 		static MapRef New(Args&&... args)
 		{
-			//std::unique_ptr<Map> object(new Map(std::forward<Args>(args)...));
-			std::unique_ptr<Map> object(std::make_unique<Map>(std::forward<Args>(args)...));
+			auto object(std::make_unique<Map>(std::forward<Args>(args)...));
 			object->SetPersistent(false);
 
 			return object.release();
 		}
 
-		Ndk::EntityHandle & AddEntity(const unsigned int layer);
+		Ndk::EntityHandle& AddEntity(const unsigned int layer);
 		std::vector<Ndk::WorldHandle>& GetLayers() { return m_layerList; }
 
 		void Display(const bool state);

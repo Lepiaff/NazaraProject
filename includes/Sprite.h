@@ -14,7 +14,6 @@
 #include <Nazara/Graphics/Material.hpp>
 #include <Nazara/Core/ResourceManager.hpp>
 
-
 #include "Renderable.h"
 #include "GraphicsSet.h"
 
@@ -47,9 +46,10 @@ namespace NzP
 
 		virtual void UpdateGraphicsComponent(Ndk::GraphicsComponent& graphicsComponent)
 		{
-			graphicsComponent.Attach(
-				std::move(GSetManager::Get(TEXTURE_NAME)
-					->GetSprite(ID_SPRITE)));
+			m_gSet = GSetManager::Get(TEXTURE_NAME);
+			std::cout << "Nombre de reference pour " << TEXTURE_NAME << " = " << m_gSet->GetReferenceCount() << std::endl;
+			std::cout << "Nombre de reference pour le sprite id " << ID_SPRITE << " = " << m_gSet->GetSprite(ID_SPRITE)->GetReferenceCount() << std::endl;
+			graphicsComponent.Attach(m_gSet->GetSprite(ID_SPRITE));
 		}
 
 		void Save(const Nz::InstancedRenderableRef& renderable)
@@ -63,11 +63,13 @@ namespace NzP
 			ID_SPRITE = GSetManager::Get(TEXTURE_NAME)->GetSpriteId(std::move(position));
 		}
 
-	protected:
+	private:
 
 		//Variables sérialisables
 		std::string TEXTURE_NAME;
 		unsigned int ID_SPRITE;
+
+		GraphicsSetRef m_gSet;
 	};
 }
 #endif

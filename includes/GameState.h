@@ -22,7 +22,7 @@ namespace NzP
 		void Leave(Ndk::StateMachine& fsm) override;
 		bool Update(Ndk::StateMachine& fsm, float elapsedTime) override;
 
-		bool SetMap(NzP::MapRef map);
+		bool SetMap(std::string mapPath);
 		void DisplayMap(const bool state);
 		void DisplayLayer(const unsigned int layer, bool display = true);
 
@@ -31,7 +31,6 @@ namespace NzP
 		std::vector<Ndk::EntityHandle> m_viewList;
 
 		float m_elapsedTime = 0;
-
 	};
 }
 #endif // !GAMESTATE_H

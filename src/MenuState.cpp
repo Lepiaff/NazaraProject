@@ -116,8 +116,8 @@ namespace NzP
 	void MenuState::CallBack5(const Ndk::ButtonWidget* button)
 	{
 		std::cout << "Quitter le jeu" << std::endl;
-		//Ndk::Application::Instance()->Quit();
-		m_appParent.Quit();
+		Ndk::Application::Instance()->Quit();
+		//m_appParent.Quit();
 	}
 }
 
