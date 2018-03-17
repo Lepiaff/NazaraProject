@@ -59,10 +59,8 @@ namespace NzP
 		}
 
 		Nz::SpriteRef GetSprite(std::size_t idSprite);
-
-		std::vector<Nz::SpriteRef>& GetSpriteList() { return m_spriteList; }
+		Nz::SpriteRef CreateSprite(std::size_t idSprite);
 		unsigned int GetSpriteId(Nz::Vector2f pos);
-
 		
 		bool IsValid() const;
 
@@ -80,7 +78,6 @@ namespace NzP
 		bool LoadFromFile(const Nz::String& filePath, const GraphicsSetParams& params = GSetManager::GetDefaultParameters());
 
 		bool LoadMaterial();
-		void CreateSpriteList();
 
 		static bool Initialize();
 		static void Uninitialize();
@@ -90,7 +87,6 @@ namespace NzP
 		static GSetManager::ManagerParams s_managerParameters;
 		
 		Nz::MaterialRef m_material;
-		std::vector<Nz::SpriteRef> m_spriteList;
 	};
 }
 #endif // GRAPHICSSET_H

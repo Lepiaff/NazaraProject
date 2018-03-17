@@ -32,10 +32,36 @@ namespace NzP
 
 	Nz::SpriteRef GraphicsSet::GetSprite(std::size_t idSprite)
 	{
-		return (
-			idSprite < m_spriteList.size() ?
-			m_spriteList[idSprite] :
-			std::move(Nz::SpriteRef()));
+		Nz::String idSpriteString = static_cast<Nz::String>(idSprite);
+		if (!Nz::SpriteLibrary::Has(idSpriteString))
+		{
+			return std::move(CreateSprite(idSprite));
+		}
+		return Nz::SpriteLibrary::Get(idSpriteString);
+	}
+
+	Nz::SpriteRef GraphicsSet::CreateSprite(std::size_t idSprite)
+	{
+		Nz::String idSpriteString = static_cast<Nz::String>(idSprite);
+
+		Nz::Vector3ui textureSize = m_material->GetDiffuseMap()->GetSize();
+		std::size_t nbTileHeight = textureSize.y / s_managerParameters.sizeTiles.y;
+		std::size_t nbTileWidth = textureSize.x / s_managerParameters.sizeTiles.x;
+
+		std::size_t heightIndex = idSprite / nbTileWidth;
+		std::size_t widthIndex = idSprite % nbTileWidth;
+
+		Nz::Rectui textureBox(
+			widthIndex * s_managerParameters.sizeTiles.x,
+			heightIndex*s_managerParameters.sizeTiles.y,
+			s_managerParameters.sizeTiles.x,
+			s_managerParameters.sizeTiles.y);
+
+		Nz::SpriteLibrary::Register(idSpriteString, Nz::Sprite::New(m_material));
+		Nz::SpriteRef spriteRef = Nz::SpriteLibrary::Get(idSpriteString);
+		spriteRef->SetTextureRect(textureBox);
+		spriteRef->SetSize(static_cast<Nz::Vector2f>(s_managerParameters.sizeTiles));
+		return std::move(spriteRef);
 	}
 
 	bool GraphicsSet::LoadMaterial()
@@ -51,31 +77,9 @@ namespace NzP
 			m_material->SetSrcBlend(Nz::BlendFunc_SrcAlpha);
 			m_material->EnableDepthWrite(false);
 
-			CreateSpriteList();
-
 			return true;
 		}
 		return false;
-	}
-
-	void GraphicsSet::CreateSpriteList()
-	{
-		Nz::Vector3ui textureSize = m_material->GetDiffuseMap()->GetSize();
-
-		std::size_t nbTileHeight = textureSize.y / s_managerParameters.sizeTiles.y;
-		std::size_t nbTileWidth = textureSize.x / s_managerParameters.sizeTiles.x;
-
-		m_spriteList.clear(); //on initialiser la list pour être certain qu'elle est vide avant de la remplir
-		for (std::size_t j = 0; j < nbTileHeight; j++)
-		{
-			for (std::size_t i = 0; i < nbTileWidth; i++)
-			{
-				Nz::Rectui textureBox(i*s_managerParameters.sizeTiles.x, j*s_managerParameters.sizeTiles.y, s_managerParameters.sizeTiles.x, s_managerParameters.sizeTiles.y);
-				m_spriteList.emplace_back(Nz::Sprite::New(m_material));
-				m_spriteList.back()->SetTextureRect(textureBox);
-				m_spriteList.back()->SetSize(static_cast<Nz::Vector2f>(s_managerParameters.sizeTiles));
-			}
-		}
 	}
 
 	bool GraphicsSetParams::IsValid() const
@@ -96,11 +100,6 @@ namespace NzP
 
 	bool GraphicsSet::Initialize()
 	{
-		/*if (!GSetLibrary::Initialize())
-		{
-			NazaraError("Failed to initialise library");
-			return false;
-		}*/
 
 		if (!GSetManager::Initialize())
 		{
