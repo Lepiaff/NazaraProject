@@ -1,4 +1,5 @@
 #include <memory>
+#include <bitset>
 
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/export.hpp>
@@ -22,8 +23,7 @@
 #include "GameState.h"
 #include "Structure.h"
 #include "GraphicsSet.h"
-#include "GraphicsSetManager.h"
-#include "MapManager.h"
+#include "Map.h"
 #include "GraphicsComponent.h"
 #include "CollidableComponent.h"
 #include "NodeComponent.h"
@@ -45,14 +45,13 @@ int main()
 		
 	Ndk::StateMachine monInstance{ s_states.mainStates.menuState };
 
+//	NzP::GSetManager::Get("D:/Programmation_2018/NazaraProject/NazaraProject/Ressources/Tilesets/32x32/Village.jpg");
+
 	///test///
-	std::string texturePath = "D:/Programmation_2018/NazaraProject/NazaraProject/Ressources/Tilesets/32x32/Village.png";
-	NzP::MapManager mapManager(application);
-	
-	if (mapManager.LoadMap("Village"))
-	{
-		s_states.mainStates.gameState->SetMap(mapManager.GetMap("Village"));
-	}
+	std::string mapPath = "D:/Programmation_2018/NazaraProject/NazaraProject/Ressources/Maps/VillageBinary.map";
+
+	s_states.mainStates.gameState->SetMap(NzP::MapManager::Get(mapPath));
+	//NzP::MapManager::Get(mapPath)->SaveMapState();
 	///end///
 
 		while (application.Run())

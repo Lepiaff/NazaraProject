@@ -4,20 +4,38 @@ namespace NzP
 {
 	GraphicsSet::GraphicsSet(const Nz::String& filePath, const GraphicsSetParams& params) : Nz::RefCounted(), Nz::Resource()
 	{
+		Initialize();
 		SetFilePath(filePath);
 		s_managerParameters = params;
 		LoadMaterial();
 	}
 
-	unsigned int GraphicsSet::GetSpriteId(Nz::Rectf textureRect)
+	unsigned int GraphicsSet::GetSpriteId(Nz::Vector2f pos)
 	{
 		//A implémenter
-		return 0;
+		Nz::Vector3ui sizeGSet = m_material->GetDiffuseMap()->GetSize();
+		Nz::Vector2f position = std::move(pos);
+		position.x += static_cast<float>(sizeGSet.x) / 2;
+		position.y = -position.y;
+
+		Nz::Vector2ui posUi{
+			static_cast<unsigned int>(position.x),
+			static_cast<unsigned int>(position.y) };
+
+		unsigned int idTile =
+			(posUi.y / s_managerParameters.sizeTiles.y) *
+			(sizeGSet.x / s_managerParameters.sizeTiles.x) +
+			posUi.x / s_managerParameters.sizeTiles.x;
+
+		return idTile;
 	}
 
 	Nz::SpriteRef GraphicsSet::GetSprite(std::size_t idSprite)
 	{
-		return (idSprite < spriteList.size() ? spriteList[idSprite] : Nz::SpriteRef());
+		return (
+			idSprite < m_spriteList.size() ?
+			m_spriteList[idSprite] :
+			std::move(Nz::SpriteRef()));
 	}
 
 	bool GraphicsSet::LoadMaterial()
@@ -25,13 +43,13 @@ namespace NzP
 		if (!s_managerParameters.IsValid())
 			return false;
 
-		material = Nz::Material::New();
-		if (material->LoadFromFile(GetFilePath()))
+		m_material = Nz::Material::New();
+		if (m_material->LoadFromFile(GetFilePath()))
 		{
-			material->EnableBlending(true);
-			material->SetDstBlend(Nz::BlendFunc_InvSrcAlpha);
-			material->SetSrcBlend(Nz::BlendFunc_SrcAlpha);
-			material->EnableDepthWrite(false);
+			m_material->EnableBlending(true);
+			m_material->SetDstBlend(Nz::BlendFunc_InvSrcAlpha);
+			m_material->SetSrcBlend(Nz::BlendFunc_SrcAlpha);
+			m_material->EnableDepthWrite(false);
 
 			CreateSpriteList();
 
@@ -42,19 +60,20 @@ namespace NzP
 
 	void GraphicsSet::CreateSpriteList()
 	{
-		Nz::SpriteRef tempSprite = Nz::Sprite::New(material);
-		std::size_t nbTileHeight = static_cast<std::size_t>(tempSprite->GetSize().y / s_managerParameters.sizeTiles.y);
-		std::size_t nbTileWidth = static_cast<std::size_t>(tempSprite->GetSize().x / s_managerParameters.sizeTiles.x);
+		Nz::Vector3ui textureSize = m_material->GetDiffuseMap()->GetSize();
 
-		spriteList.clear(); //on initialiser la list pour être certain qu'elle est vide avant de la remplir
+		std::size_t nbTileHeight = textureSize.y / s_managerParameters.sizeTiles.y;
+		std::size_t nbTileWidth = textureSize.x / s_managerParameters.sizeTiles.x;
+
+		m_spriteList.clear(); //on initialiser la list pour être certain qu'elle est vide avant de la remplir
 		for (std::size_t j = 0; j < nbTileHeight; j++)
 		{
 			for (std::size_t i = 0; i < nbTileWidth; i++)
 			{
 				Nz::Rectui textureBox(i*s_managerParameters.sizeTiles.x, j*s_managerParameters.sizeTiles.y, s_managerParameters.sizeTiles.x, s_managerParameters.sizeTiles.y);
-				spriteList.emplace_back(Nz::Sprite::New(material));
-				spriteList.back()->SetTextureRect(textureBox);
-				spriteList.back()->SetSize(static_cast<Nz::Vector2f>(s_managerParameters.sizeTiles));
+				m_spriteList.emplace_back(Nz::Sprite::New(m_material));
+				m_spriteList.back()->SetTextureRect(textureBox);
+				m_spriteList.back()->SetSize(static_cast<Nz::Vector2f>(s_managerParameters.sizeTiles));
 			}
 		}
 	}
@@ -95,7 +114,6 @@ namespace NzP
 	void GraphicsSet::Uninitialize()
 	{
 		GSetManager::Uninitialize();
-		//GSetLibrary::Uninitialize();
 	}
 
 	//Méthode de chargement de la ressource
@@ -112,16 +130,11 @@ namespace NzP
 			return false;
 		}
 		std::cout << "GraphicsSet / LoadFromFile : Done" << std::endl;
-		GSetManager::Register(filePath, this);
-		std::cout << "GraphicsSet registered" << std::endl;
+		//GSetManager::Register(filePath, this);
+		//std::cout << "GraphicsSet registered" << std::endl;
 		return true;
 	}
 
-
-
-
-	GSetLibrary::LibraryMap GraphicsSet::s_library;
-	GSetLoader::LoaderList GraphicsSet::s_loaders;
 	GSetManager::ManagerMap GraphicsSet::s_managerMap;
 	GSetManager::ManagerParams GraphicsSet::s_managerParameters;
 }

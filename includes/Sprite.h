@@ -16,7 +16,6 @@
 
 
 #include "Renderable.h"
-#include "GraphicsSetManager.h"
 #include "GraphicsSet.h"
 
 
@@ -48,14 +47,20 @@ namespace NzP
 
 		virtual void UpdateGraphicsComponent(Ndk::GraphicsComponent& graphicsComponent)
 		{
-			graphicsComponent.Attach(GSetManager::Get(TEXTURE_NAME)->GetSprite(ID_SPRITE));
+			graphicsComponent.Attach(
+				std::move(GSetManager::Get(TEXTURE_NAME)
+					->GetSprite(ID_SPRITE)));
 		}
 
 		void Save(const Nz::InstancedRenderableRef& renderable)
 		{
-			Nz::Rectf textureRect = dynamic_cast<Nz::Sprite*>(renderable.Get())->GetTextureCoords();
+			Nz::Sprite* spriteRef = dynamic_cast<Nz::Sprite*>(renderable.Get());
+			Nz::Vector2f position{ 
+				spriteRef->GetBoundingVolume().obb.localBox.x,
+				spriteRef->GetBoundingVolume().obb.localBox.y };
+
 			TEXTURE_NAME = renderable->GetMaterial()->GetFilePath().ToStdString();
-			ID_SPRITE = GSetManager::Get(TEXTURE_NAME)->GetSpriteId(textureRect);
+			ID_SPRITE = GSetManager::Get(TEXTURE_NAME)->GetSpriteId(std::move(position));
 		}
 
 	protected:

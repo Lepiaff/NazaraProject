@@ -15,7 +15,6 @@
 #include "AbstractState.h"
 #include "Structure.h"
 #include "GameState.h"
-//#include "GraphicsSet.h"
 
 namespace NzP
 {

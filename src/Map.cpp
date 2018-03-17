@@ -2,15 +2,64 @@
 
 namespace NzP
 {
-	Map::Map(Ndk::Application * app, std::string name) : m_application(app), NAME(name)
+	
+	Map::Map(const Nz::String& filePath, const MapParams& params) : NAME(filePath.ToStdString())
 	{
+		SetFilePath(filePath);
+		//m_application = Ndk::Application::Instance();
 		SIZE.first = 0;
 		SIZE.second = 0;
 		NB_LAYERS = 0;
 		ENTITIES.clear();
 	}
 
-	bool Map::Load()
+	bool Map::LoadFromFile(const Nz::String & filePath, const MapParams & params)
+	{
+		SetFilePath(filePath);
+		std::cout << "Map / LoadFromFile : " << filePath << std::endl;
+		if (params.IsValid())
+			s_managerParameters = params;
+		if (!Deserialize())
+		{
+			std::cout << "Map / LoadFromFile : Echec" << std::endl;
+			return false;
+		}
+		std::cout << "Map / LoadFromFile : Done" << std::endl;
+		MapManager::Register(filePath, this);
+		std::cout << "Map registered" << std::endl;
+		return true;
+	}
+	bool Map::Deserialize()
+	{
+		fs::path mapPath = GetFilePath().ToStdString();
+		std::ifstream fichier(mapPath.c_str());
+
+		if (fichier.is_open())
+		{
+			boost::archive::binary_iarchive iBinArchive(fichier);
+			Map& MAP = *this;
+			iBinArchive >> MAP;
+			MAP.LoadMap();
+			return true;
+		}
+		else { return false; }
+	}
+
+	bool Map::Serialize()
+	{
+		fs::path mapPath = GetFilePath().ToStdString();
+		std::ofstream fichier(mapPath.c_str());
+		if (fichier.is_open())
+		{
+			boost::archive::binary_oarchive oBinArchive(fichier);
+			NzP::Map& MAP = *this;
+			oBinArchive << MAP;
+			return true;
+		}
+		return false;
+	}
+
+	bool Map::LoadMap()
 	{
 		CreateLayers(NB_LAYERS);//J'instancie autant de world qu'il y a de layer à ma map
 
@@ -21,9 +70,9 @@ namespace NzP
 		return true;
 	}
 
-	bool Map::Save()
+	bool Map::SaveMap()
 	{
-		//std::vector<Entity> ENTITIES;
+		ENTITIES.clear();
 		for (auto entity : m_entities)
 		{
 			ENTITIES.emplace_back(Entity());
@@ -31,6 +80,7 @@ namespace NzP
 		}
 		return true;
 	}
+
 
 	Ndk::EntityHandle & Map::AddEntity(const unsigned int layer)
 	{
@@ -58,7 +108,30 @@ namespace NzP
 		NB_LAYERS = nbLayers;
 		for (unsigned int i = 0; i < NB_LAYERS; i++)
 		{
-			m_layerList.emplace_back(&m_application->AddWorld());
+			m_layerList.emplace_back(&Ndk::Application::Instance()->AddWorld());
 		}
 	}
+
+	bool MapParams::IsValid() const
+	{
+		if(size.x > 0 && size.y > 0)
+			return true;
+
+		return false;
+	}
+
+	void Map::SaveMapState()
+	{
+		SaveMap();
+		Serialize();
+	}
+
+	bool Map::IsValid() const
+	{
+		return true;
+		//return m_impl != nullptr;
+	}
+
+	MapManager::ManagerMap Map::s_managerMap;
+	MapManager::ManagerParams Map::s_managerParameters;
 }

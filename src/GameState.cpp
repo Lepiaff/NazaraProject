@@ -14,6 +14,7 @@ namespace NzP
 
 	void GameState::Leave(Ndk::StateMachine& fsm)
 	{
+		//m_currentMap->RemoveReference();
 		DisplayMap(false);
 	}
 
@@ -28,14 +29,13 @@ namespace NzP
 		{
 			m_elapsedTime += elapsedTime;
 		}
-		
 		m_renderWindow.Display();
 		return true;
 	}
 
-	bool GameState::SetMap(NzP::Map& map)
+	bool GameState::SetMap(NzP::MapRef map)
 	{
-		m_currentMap = &map;
+		m_currentMap = map;
 
 		for (auto layer : m_currentMap->GetLayers())
 		{
