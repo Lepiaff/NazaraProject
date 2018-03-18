@@ -24,22 +24,21 @@ namespace NzP
 		{
 			std::cout << "Serialize/Deserialize CollidableComponent" << std::endl;
 
-			std::cout << "Serialize/Deserialize Base CollidableComponent : " << std::endl;
 			ar & boost::serialization::base_object<Component>(*this);
-			ar & POSITION;
-			std::cout << "CollidableComponent _ POSITION : " << POSITION << std::endl;
-			ar & TAILLE;
-			std::cout << "CollidableComponent _ TAILLE : " << TAILLE << std::endl;
+			ar & m_position;
+			std::cout << "CollidableComponent _ POSITION : " << m_position << std::endl;
+			ar & m_taille;
+			std::cout << "CollidableComponent _ TAILLE : " << m_taille << std::endl;
 			std::cout << "FIN Serialize/Deserialize CollidableComponent " << std::endl;
 		}
 	public:
 		CollidableComponent() : Component("COLLIDABLE_COMPONENT") { ; }
 		virtual ~CollidableComponent() = default;
 
-		virtual void UpdateEntity(Ndk::EntityHandle entity) const override
+		virtual void UpdateNazaraEntity(Ndk::EntityHandle entity) const override
 		{
-			Ndk::CollisionComponent2D& collisionComponent = entity->AddComponent<Ndk::CollisionComponent2D>();
-			
+			Ndk::CollisionComponent2D& collisionComponent = 
+				entity->AddComponent<Ndk::CollisionComponent2D>();
 		}
 
 		virtual void Save(Ndk::BaseComponent* comp) override
@@ -48,8 +47,8 @@ namespace NzP
 		}
 
 	protected:
-		unsigned int POSITION[2];
-		unsigned int TAILLE[2];
+		unsigned int m_position[2];
+		unsigned int m_taille[2];
 	};
 }
 #endif // !COLLIDABLECOMPONENT_H

@@ -31,14 +31,12 @@ namespace NzP
 		{
 			std::cout << "Serialize/Deserialize GraphicsComponent" << std::endl;
 
-			std::cout << "Serialize/Deserialize Base GraphicsComponent : " << std::endl;
-			ar & boost::serialization::base_object<Component>(*this);
-			std::cout << "Serialize/Deserialize Sprite de GraphicsComponent " << std::endl;
-			ar & SPRITE;
+			ar & boost::serialization::base_object<Component>(*this); ///// au bout du 9ieme ca plante en sortie d'ici
+			ar & m_sprite;
 			std::cout << "FIN Serialize/Deserialize GraphicsComponent " << std::endl;
 		}
 
-		boost::shared_ptr<Sprite> SPRITE;
+		boost::shared_ptr<Sprite> m_sprite;
 
 	public:
 		GraphicsComponent() : Component("GRAPHICS_COMPONENT") { ; }
@@ -55,20 +53,18 @@ namespace NzP
 				if (sprite)
 				{
 					std::unique_ptr<Sprite> sprite = std::make_unique<Sprite>();
-					SPRITE = std::move(sprite);
-					SPRITE->Save(renderable);
+					m_sprite = std::move(sprite);
+					m_sprite->Save(renderable);
 				}
-
 				//idem pour le text ou autres renderables...
 			}
-
-
 		}
 
-		virtual void UpdateEntity(Ndk::EntityHandle entity) const override
+		virtual void UpdateNazaraEntity(Ndk::EntityHandle entity) const override
 		{
-			Ndk::GraphicsComponent& graphicsComponent = entity->AddComponent<Ndk::GraphicsComponent>();
-			SPRITE->UpdateGraphicsComponent(graphicsComponent);
+			Ndk::GraphicsComponent& graphicsComponent =
+				entity->AddComponent<Ndk::GraphicsComponent>();
+			m_sprite->UpdateGraphicsComponent(graphicsComponent);
 		}	
 	};
 }

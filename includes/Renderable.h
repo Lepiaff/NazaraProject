@@ -16,19 +16,19 @@ namespace NzP
 		void serialize(Archive& ar, const unsigned int version)
 		{
 			std::cout << "Serialize/Deserialize Renderable" << std::endl;
-			ar & RENDER_NAME;
-			std::cout << "Renderable _ RENDER_NAME : " << RENDER_NAME << std::endl;
+			ar & m_renderName;
+			std::cout << "Renderable _ m_renderName : " << m_renderName << std::endl;
 		}
 
 	public:
 		Renderable() = default;
-		Renderable(std::string name) : RENDER_NAME(std::move(name)) { ; }
+		Renderable(std::string name) : m_renderName(std::move(name)) { ; }
 		~Renderable() = default;
 
 		virtual void UpdateGraphicsComponent(Ndk::GraphicsComponent& graphicsComponent) = 0;
 		virtual void Save(const Nz::InstancedRenderableRef& renderable) = 0;
 
 	protected:
-		std::string RENDER_NAME;
+		std::string m_renderName;
 	};
 }

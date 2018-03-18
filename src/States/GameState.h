@@ -3,19 +3,25 @@
 #ifndef GAMESTATE_H
 #define GAMESTATE_H
 
+#include <NDK/State.hpp>
 #include <NDK/Entity.hpp>
 
-#include "AbstractState.h"
-#include "Structure.h"
+#include "StateData.h"
 #include "MenuState.h"
 #include "Map.h"
 
 namespace NzP
 {
-	class GameState : public AbstractState
+	class GameState : public Ndk::State
 	{
+	private:
+		//Attrinuts
+		StateData & m_stateData;
+		NzP::MapRef m_currentMap;
+		float m_elapsedTime = 0;
+		
 	public:
-		GameState(Ndk::Application& app, Nz::RenderWindow& renderWindow, StateData& states);
+		GameState(StateData& stateData);
 		virtual ~GameState() = default;
 		
 		void Enter(Ndk::StateMachine& fsm) override;
@@ -23,14 +29,6 @@ namespace NzP
 		bool Update(Ndk::StateMachine& fsm, float elapsedTime) override;
 
 		bool SetMap(std::string mapPath);
-		void DisplayMap(const bool state);
-		void DisplayLayer(const unsigned int layer, bool display = true);
-
-	protected:
-		NzP::MapRef m_currentMap;
-		std::vector<Ndk::EntityHandle> m_viewList;
-
-		float m_elapsedTime = 0;
 	};
 }
 #endif // !GAMESTATE_H

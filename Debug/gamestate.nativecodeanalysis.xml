@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DEFECTS>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>d:\programmation_2018\nazaraproject\nazaraproject\includes\</FILEPATH>
+      <FILENAME>graphicscomponent.h</FILENAME>
+      <LINE>55</LINE>
+      <COLUMN>29</COLUMN>
+    </SFA>
+    <DEFECTCODE>6246</DEFECTCODE>
+    <DESCRIPTION>La déclaration locale de 'sprite' masque la déclaration du même nom dans la portée externe. Pour des informations supplémentaires, reportez-vous à la déclaration précédente à la ligne '52' de 'd:\programmation_2018\nazaraproject\nazaraproject\includes\graphicscomponent.h'.</DESCRIPTION>
+    <FUNCTION>NzP::GraphicsComponent::Save</FUNCTION>
+    <DECORATED>?Save@GraphicsComponent@NzP@@UAEXPAVBaseComponent@Ndk@@@Z</DECORATED>
+    <FUNCLINE>45</FUNCLINE>
+    <PATH>
+      <SFA>
+        <FILEPATH>d:\programmation_2018\nazaraproject\nazaraproject\includes\</FILEPATH>
+        <FILENAME>graphicscomponent.h</FILENAME>
+        <LINE>52</LINE>
+        <COLUMN>16</COLUMN>
+      </SFA>
+    </PATH>
+  </DEFECT>
+</DEFECTS>

@@ -27,43 +27,42 @@ namespace NzP
 		{
 			std::cout << "Serialize/Deserialize NodeComponent" << std::endl;
 
-			std::cout << "Serialize/Deserialize Base NodeComponent : " << std::endl;
 			ar & boost::serialization::base_object<Component>(*this);
-			ar & POSITION;
-			std::cout << "CollidableComponent _ POSITION : " << POSITION.first << " : " << POSITION.second << std::endl;
-			ar & SCALE;
-			std::cout << "CollidableComponent _ SCALE : " << SCALE.first << " : " << SCALE.second << std::endl;
-			ar & ROTATION;
-			std::cout << "CollidableComponent _ ROTATION : " << ROTATION << std::endl;
+			ar & m_position;
+			std::cout << "NodeComponent _ m_position : " << m_position.first << " : " << m_position.second << std::endl;
+			ar & m_scale;
+			std::cout << "NodeComponent _ m_scale : " << m_scale.first << " : " << m_scale.second << std::endl;
+			ar & m_rotation;
+			std::cout << "NodeComponent _ m_rotation : " << m_rotation << std::endl;
 			std::cout << "FIN Serialize/Deserialize NodeComponent " << std::endl;
 		}
 	public:
 		NodeComponent() : Component("NODE_COMPONENT") { ; }
 		virtual ~NodeComponent() = default;
 
-		virtual void UpdateEntity(Ndk::EntityHandle entity) const override
+		virtual void UpdateNazaraEntity(Ndk::EntityHandle entity) const override
 		{
 			Ndk::NodeComponent& nodeComponent = entity->AddComponent<Ndk::NodeComponent>();
-			nodeComponent.SetPosition(POSITION.first, POSITION.second, 0);
-			nodeComponent.SetScale(SCALE.first, SCALE.second, 0);
-			nodeComponent.Rotate(Nz::EulerAnglesf(0.f, 0.f, ROTATION));
+			nodeComponent.SetPosition(m_position.first, m_position.second, 0);
+			nodeComponent.SetScale(m_scale.first, m_scale.second, 0);
+			nodeComponent.Rotate(Nz::EulerAnglesf(0.f, 0.f, m_rotation));
 		}
 
 		virtual void Save(Ndk::BaseComponent* comp) override
 		{
 			Ndk::NodeComponent* nodeComp = static_cast<Ndk::NodeComponent*>(comp);
 			
-			POSITION.first = nodeComp->GetPosition().x;
-			POSITION.second = nodeComp->GetPosition().y;
-			SCALE.first = nodeComp->GetScale().x;
-			SCALE.second = nodeComp->GetScale().y;
-			ROTATION = nodeComp->GetRotation().z;
+			m_position.first = nodeComp->GetPosition().x;
+			m_position.second = nodeComp->GetPosition().y;
+			m_scale.first = nodeComp->GetScale().x;
+			m_scale.second = nodeComp->GetScale().y;
+			m_rotation = nodeComp->GetRotation().z;
 		}
 
 	protected:
-		std::pair<float, float> POSITION;
-		std::pair<float, float> SCALE;
-		float ROTATION;
+		std::pair<float, float> m_position;
+		std::pair<float, float> m_scale;
+		float m_rotation;
 	};
 }
 #endif // !NODECOMPONENT_H

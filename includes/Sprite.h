@@ -26,30 +26,26 @@ namespace NzP
 		friend class boost::serialization::access;
 		template<class Archive>
 		void serialize(Archive& ar, const unsigned int version)
-		{///////////////////////////////////////////////////////////////////////////////////////////Au bout du 7/9ieme, ca crash !!!!!
+		{///////////////////////////////Au bout du 7/9ieme, ca crash !!!!!
 			std::cout << "Serialize/Deserialize Sprite" << std::endl;
-
-			std::cout << "Serialize/Deserialize Base Sprite : " << std::endl;
 			ar & boost::serialization::base_object<Renderable>(*this);
 
-			ar & TEXTURE_NAME;
-			std::cout << "Sprite _ TEXTURE_NAME : " << TEXTURE_NAME << std::endl;
-			ar & ID_SPRITE;
-			std::cout << "Sprite _ ID_SPRITE : " << ID_SPRITE << std::endl;
+			ar & m_textureName;
+			std::cout << "Sprite _ m_textureName : " << m_textureName << std::endl;
+			ar & m_idSprite;
+			std::cout << "Sprite _ m_idSprite : " << m_idSprite << std::endl;
 			std::cout << "FIN Serialize/Deserialize Sprite " << std::endl;
 		}
 
 	public:
 		Sprite() = default;
-		Sprite(std::string textureName) : NzP::Renderable("SPRITE"), TEXTURE_NAME(textureName) { ; }
-		~Sprite() = default;
+		Sprite(std::string textureName) : NzP::Renderable("SPRITE"), m_textureName(textureName) { ; }
+		~Sprite() {	std::cout << m_gSet->GetReferenceCount() << std::endl; }
 
 		virtual void UpdateGraphicsComponent(Ndk::GraphicsComponent& graphicsComponent)
 		{
-			m_gSet = GSetManager::Get(TEXTURE_NAME);
-			std::cout << "Nombre de reference pour " << TEXTURE_NAME << " = " << m_gSet->GetReferenceCount() << std::endl;
-			std::cout << "Nombre de reference pour le sprite id " << ID_SPRITE << " = " << m_gSet->GetSprite(ID_SPRITE)->GetReferenceCount() << std::endl;
-			graphicsComponent.Attach(m_gSet->GetSprite(ID_SPRITE));
+			m_gSet = GSetManager::Get(m_textureName);
+			graphicsComponent.Attach(m_gSet->GetSprite(m_idSprite));
 		}
 
 		void Save(const Nz::InstancedRenderableRef& renderable)
@@ -59,15 +55,15 @@ namespace NzP
 				spriteRef->GetBoundingVolume().obb.localBox.x,
 				spriteRef->GetBoundingVolume().obb.localBox.y };
 
-			TEXTURE_NAME = renderable->GetMaterial()->GetFilePath().ToStdString();
-			ID_SPRITE = GSetManager::Get(TEXTURE_NAME)->GetSpriteId(std::move(position));
+			m_textureName = renderable->GetMaterial()->GetFilePath().ToStdString();
+			m_idSprite = GSetManager::Get(m_textureName)->GetSpriteId(std::move(position));
 		}
 
 	private:
 
 		//Variables sérialisables
-		std::string TEXTURE_NAME;
-		unsigned int ID_SPRITE;
+		std::string m_textureName;
+		unsigned int m_idSprite;
 
 		GraphicsSetRef m_gSet;
 	};

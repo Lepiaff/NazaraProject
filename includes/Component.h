@@ -19,28 +19,28 @@ class CollidableComponent;
 
 namespace NzP
 {
-	class Component
+	class Component //A SUPPRIMER, NON UTILISE POUR LE MOMENT
 	{
 	private:
 		friend class boost::serialization::access;
 		template<class Archive>
 		void serialize(Archive& ar, const unsigned int version)
 		{
-			std::cout << "Serialize/Deserialize Component" << std::endl;
-			ar & TYPE;
-			std::cout << "Component _ TYPE : " << TYPE << std::endl;
-			std::cout << "FIN Serialize/Deserialize Component " << std::endl;
+			//std::cout << "Serialize/Deserialize Component" << std::endl;
+			ar & m_type;
+			std::cout << "Component _ m_type : " << m_type << std::endl;
+			//std::cout << "FIN Serialize/Deserialize Component " << std::endl;
 		}
 
 	public:
-		Component(std::string type = "Component") { TYPE = std::move(type); }
+		Component(std::string type = "Component") { m_type = std::move(type); }
 		virtual ~Component() = default;
 
-		virtual const std::string& Type() const { return TYPE; }
-		virtual void UpdateEntity(Ndk::EntityHandle entity) const = 0;
+		virtual const std::string& Type() const { return m_type; }
+		virtual void UpdateNazaraEntity(Ndk::EntityHandle entity) const = 0;
 		virtual void Save(Ndk::BaseComponent* comp) = 0;
 	protected:
-		std::string TYPE;
+		std::string m_type;
 	};
 }
 #endif // !COMPONENT_H

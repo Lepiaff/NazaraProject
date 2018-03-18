@@ -31,58 +31,57 @@ namespace NzP
 		{
 			std::cout << "Serialize/Deserialize Entity" << std::endl;
 
-			ar & LAYER_ID;
-			std::cout << "CollidableComponent _ LAYER_ID : " << LAYER_ID << std::endl;
+			ar & m_idLayer;
+			std::cout << "CollidableComponent _ m_idLayer : " << m_idLayer << std::endl;
 
-			std::cout << "Serialize/Deserialize NodeComponent de Entity " << std::endl;
-			ar & NODE_COMPONENT;
-			std::cout << "Serialize/Deserialize GraphicsComponent de Entity " << std::endl;
-			ar & GRAPHICS_COMPONENT; 
-			std::cout << "Serialize/Deserialize CollidableComponent de Entity " << std::endl;
-			ar & COLLIDABLE_COMPONENT;
+			std::cout << "Serialize/Deserialize des component de Entity " << std::endl;
+			ar & m_nodeComponent;
+			ar & m_graphicsComponent; 
+			ar & m_collidableComponent;
 
-			std::cout << "FIN Serialize/Deserialize Entity de Map " << std::endl;
+			std::cout << "FIN Serialize/Deserialize de Entity " << std::endl;
 		}
 
-		unsigned int LAYER_ID;
+		unsigned int m_idLayer;
 
-		boost::shared_ptr<NodeComponent> NODE_COMPONENT;
-		boost::shared_ptr<GraphicsComponent>GRAPHICS_COMPONENT;
-		boost::shared_ptr<CollidableComponent> COLLIDABLE_COMPONENT;
+		boost::shared_ptr<NodeComponent> m_nodeComponent;
+		boost::shared_ptr<GraphicsComponent>m_graphicsComponent;
+		boost::shared_ptr<CollidableComponent> m_collidableComponent;
 
 	public:
 		Entity() = default;
 		~Entity() = default;
 
-		void CreateEntity(std::vector<Ndk::WorldHandle>& wolrdList, std::vector<Ndk::EntityHandle>& entityList)
+		const unsigned int GetIdLayer() const { return m_idLayer; }
+
+		void UpdateNazaraEntity(Ndk::EntityHandle entity)
 		{
-			entityList.emplace_back(wolrdList[LAYER_ID]->CreateEntity());
-			if (NODE_COMPONENT)
-				NODE_COMPONENT->UpdateEntity(entityList.back());
+			if (m_nodeComponent)
+				m_nodeComponent->UpdateNazaraEntity(entity);
 
-			if (GRAPHICS_COMPONENT)
-				GRAPHICS_COMPONENT->UpdateEntity(entityList.back());
+			if (m_graphicsComponent)
+				m_graphicsComponent->UpdateNazaraEntity(entity);
 
-			if (COLLIDABLE_COMPONENT)
-				COLLIDABLE_COMPONENT->UpdateEntity(entityList.back());
+			if (m_collidableComponent)
+				m_collidableComponent->UpdateNazaraEntity(entity);
 		}
 
-		void SaveEntity(const Ndk::EntityHandle& entityHandle)
+		void Save(const Ndk::EntityHandle& entityHandle)
 		{
 			if (entityHandle->HasComponent<Ndk::NodeComponent>())
 			{
-				NODE_COMPONENT = boost::make_shared<NodeComponent>();
-				NODE_COMPONENT->Save(&entityHandle->GetComponent<Ndk::NodeComponent>());
+				m_nodeComponent = boost::make_shared<NodeComponent>();
+				m_nodeComponent->Save(&entityHandle->GetComponent<Ndk::NodeComponent>());
 			}
 			if (entityHandle->HasComponent<Ndk::GraphicsComponent>())
 			{
-				GRAPHICS_COMPONENT = boost::make_shared<GraphicsComponent>();
-				GRAPHICS_COMPONENT->Save(&entityHandle->GetComponent<Ndk::GraphicsComponent>());
+				m_graphicsComponent = boost::make_shared<GraphicsComponent>();
+				m_graphicsComponent->Save(&entityHandle->GetComponent<Ndk::GraphicsComponent>());
 			}
 			if (entityHandle->HasComponent<Ndk::CollisionComponent2D>())
 			{
-				COLLIDABLE_COMPONENT = boost::make_shared<CollidableComponent>();
-				COLLIDABLE_COMPONENT->Save(&entityHandle->GetComponent<Ndk::CollisionComponent2D>());
+				m_collidableComponent = boost::make_shared<CollidableComponent>();
+				m_collidableComponent->Save(&entityHandle->GetComponent<Ndk::CollisionComponent2D>());
 			}
 		}
 	};

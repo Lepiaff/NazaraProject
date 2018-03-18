@@ -49,8 +49,8 @@ namespace NzP
 		bool LoadMaterial();
 		
 	public:
-		GraphicsSet() = default;
-		~GraphicsSet() = default;
+		GraphicsSet() { ; }
+		~GraphicsSet() { std::cout<<this->GetReferenceCount()<<std::endl; }
 
 		///Méthodes publiques
 		Nz::SpriteRef GetSprite(std::size_t idSprite);

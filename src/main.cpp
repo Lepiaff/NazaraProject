@@ -1,64 +1,72 @@
 #include <memory>
-#include <bitset>
-
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/export.hpp>
-#include <boost/serialization/access.hpp>
-#include <boost/serialization/string.hpp>
-#include <boost/serialization/version.hpp>
-#include <boost/serialization/split_free.hpp>
-#include <boost/serialization/serialization.hpp>
-#include <boost/serialization/collection_size_type.hpp>
-#include <boost/serialization/array.hpp>
-#include <boost/serialization/assume_abstract.hpp>
-#include <boost/serialization/unique_ptr.hpp>
-#include <boost/serialization/wrapper.hpp>
 
 #include <NDK/Application.hpp>
-#include <Nazara/Platform/VideoMode.hpp>
-#include <Nazara/Renderer/RenderWindow.hpp>
 #include <NDK/StateMachine.hpp>
 
+#include <Nazara/Platform/VideoMode.hpp>
+#include <Nazara/Renderer/RenderWindow.hpp>
+
 #include "MenuState.h"
-#include "GameState.h"
-#include "Structure.h"
-#include "GraphicsSet.h"
-#include "Map.h"
-#include "GraphicsComponent.h"
-#include "CollidableComponent.h"
-#include "NodeComponent.h"
-#include "Component.h"
+#include "StateData.h"
+
+
+static unsigned int WINDOW_WIDTH = 800;
+static unsigned int WINDOW_HEIGHT = 600;
+static std::string WINDOW_TITLE = "Redemarrage";
 
 int main()
 {
+	//Initialisation de l'application
+	///Permet d'initialier tous les modules de Nazara
 	Ndk::Application application;
 
+	//Initialisation de la fenêtre de rendu
+	///
 	Nz::RenderWindow& mainWindow = application.AddWindow<Nz::RenderWindow>();
-	mainWindow.Create(Nz::VideoMode(800, 600, 32), "Test");
+	mainWindow.Create(Nz::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT, 32), WINDOW_TITLE);
 	mainWindow.EnableVerticalSync(true);
+	mainWindow.EnableCloseOnQuit(false);
 
-	NzP::StateData s_states
-	{ 
-			std::make_shared<NzP::MenuState>(application, mainWindow, s_states),
-			std::make_shared<NzP::GameState>(application, mainWindow, s_states)
-	};
-		
-	Ndk::StateMachine monInstance{ s_states.mainStates.menuState };
+	//Création d'un world dans l'application
+	///
+	Ndk::World& world = application.AddWorld();
+	world.GetSystem<Ndk::RenderSystem>().SetDefaultBackground(Nz::ColorBackground::New(Nz::Color(117, 122, 214)));
+	world.GetSystem<Ndk::RenderSystem>().SetGlobalUp(Nz::Vector3f::Down());
 
-	///test///
-	std::string mapPath = "D:/Programmation_2018/NazaraProject/NazaraProject/Ressources/Maps/VillageBinaryFullSize.map";
-	s_states.mainStates.gameState->SetMap(mapPath);
+	//Création d'une caméra dans le world pour représenter la vue
+	///et paramêtrage de la vue 2d
+	const Ndk::EntityHandle& camera = world.CreateEntity();
+	Ndk::CameraComponent& cameraComponent = camera->AddComponent<Ndk::CameraComponent>();
+	cameraComponent.SetProjectionType(Nz::ProjectionType_Orthogonal);
+	cameraComponent.SetTarget(&mainWindow);
+	camera->AddComponent<Ndk::NodeComponent>();
 
-	///end///
+	//Création d'un canvas
+	///Permet de disposer différents widgets de façon ordonnée dans la fenêtre
+	Ndk::Canvas canvas(world.CreateHandle(), mainWindow.GetEventHandler(), mainWindow.GetCursorController().CreateHandle());
+	
+	
+	//Création du StateData
+	///Contient les éléments nécéssaires au fonctionnement des states
+	NzP::StateData stateData;
+	stateData.app = &application;
+	stateData.window = &mainWindow;
+	stateData.canvas = &canvas;
+	stateData.camera = camera;
+	stateData.world = world.CreateHandle();
+
+	//Création et initialisation de la StateMachine
+	///On l'initialise avec un MenuState
+	Ndk::StateMachine fsm{ std::make_shared<NzP::MenuState>(stateData) };
 
 		while (application.Run())
 		{
-			if (!monInstance.Update(application.GetUpdateTime()))
+			if (!fsm.Update(application.GetUpdateTime()))
 			{
 				// Gestion d'erreur si besoin 
 				return EXIT_FAILURE; // EXIT_SUCCESS si c'est juste la fin du jeu 
 			}
+			mainWindow.Display();
 		}
-
 	return EXIT_SUCCESS;
 }

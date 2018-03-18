@@ -8,6 +8,7 @@
 #include <fstream>
 #include <iostream>
 #include <filesystem>
+#include <algorithm>
 
 #include <boost/serialization/version.hpp>
 #include <boost/serialization/split_free.hpp>
@@ -22,8 +23,8 @@
 #include <boost/serialization/utility.hpp>
 #include <boost/serialization/vector.hpp>
 
-#include <Nazara/Core/MovablePtr.hpp>
 #include <NDK/Application.hpp>
+#include <Ndk/Entity.hpp>
 #include <Ndk/Entity.hpp>
 #include <Ndk/World.hpp>
 #include <NDK/Components.hpp>
@@ -55,7 +56,6 @@ namespace NzP
 	using MapConstRef = Nz::ObjectRef<const Map>;
 	using MapManager = Nz::ResourceManager<Map, MapParams>;
 	using MapRef = Nz::ObjectRef<Map>;
-	struct MapImpl {};
 
 	class Map : public Nz::RefCounted, public Nz::Resource
 	{
@@ -69,49 +69,52 @@ namespace NzP
 		void serialize(Archive& ar, const unsigned int version)
 		{
 			std::cout << "Serialize/Deserialize Map" << std::endl;
-			ar & NAME;
-			std::cout << "Map _ NAME : " << NAME << std::endl;
-			ar & SIZE;
-			std::cout << "Map _ SIZE : " << SIZE.first << " : " << SIZE.second << std::endl;
-			ar & NB_LAYERS;
-			std::cout << "Mapt _ NB_LAYERS : " << NB_LAYERS << std::endl;
+			ar & m_filePath;
+			std::cout << "Map _ m_filePath : " << m_filePath << std::endl;
+			ar & m_size;
+			std::cout << "Map _ m_size : " << m_size.first << " : " << m_size.second << std::endl;
+			ar & m_nbLayers;
+			std::cout << "Mapt _ m_nbLayers : " << m_nbLayers << std::endl;
 
 			std::cout << "Serialize/Deserialize Entity de Map " << std::endl;
-			ar & ENTITIES;
+			std::cout << "Npmbre d'entites dans la Map : "<< m_entities.size() << std::endl;
+			ar & m_entities;
+			std::cout << "Npmbre d'entites dans la Map : " << m_entities.size() << std::endl;
 			std::cout << "FIN Serialize/Deserialize Map " << std::endl;
 		}
-
+		
+		//Paramètrage du ResourceManager
+		///Surcharge de la méthode LoadFromFile de Nz::Resource
 		bool LoadFromFile(const Nz::String& filePath, const MapParams& params = MapManager::GetDefaultParameters());
-
-		Nz::MovablePtr<MapImpl> m_impl = nullptr;
+		///Déclarations du ResourceManager
 		static MapManager::ManagerMap s_managerMap;
 		static MapManager::ManagerParams s_managerParameters;
 
-		//Variables sérialisables
-		std::string NAME;
-		std::pair<float, float> SIZE;
-		unsigned int NB_LAYERS;
-		std::vector<Entity> ENTITIES;
+		//Variables sérialisables caractérisant la map
+		std::string m_filePath;
+		std::pair<float, float> m_size;
+		unsigned int m_nbLayers;
+		std::vector<Entity> m_entities;
 
-		// Autres variables
-		std::vector<unsigned int> m_LayerByEntity;
-		std::vector<Nz::SpriteRef> m_GSets;
-		std::vector<Ndk::EntityHandle> m_entities;
+		//Attributs
+		std::vector<Ndk::EntityHandle> m_entityList;
 
-		std::vector<Ndk::WorldHandle> m_layerList;
-
-		bool LoadMap();
-		bool SaveMap();
-
+		//Méthodes privées
+		///Serialize et Deserialize permettent la lecture du fichier .map
+		///et l'implémentation de l'architecture d'une map au format maison (non Nazara)
 		bool Deserialize();
 		bool Serialize();
 
 	public:
 		Map() = default;
 		Map(const Nz::String& filePath, const MapParams& params = MapParams());
-		~Map() = default;
+		~Map() { std::cout << this->GetReferenceCount() << std::endl; }
 
-		void SaveMapState();
+		//Méthodes publiques
+		///Méthode permettant de convertir la Map maison en Map Nazara pouvant être rendu
+		void DisplayMap(Ndk::WorldHandle& world);
+		///Destruction des entitées de la map afféctées au world (pas très optimisé)
+		void HideMap();
 
 		bool IsValid() const;
 
@@ -124,30 +127,16 @@ namespace NzP
 			return object.release();
 		}
 
-		Ndk::EntityHandle& AddEntity(const unsigned int layer);
-		std::vector<Ndk::WorldHandle>& GetLayers() { return m_layerList; }
+		//Accesseurs / Mutateurs
+		///Nombre de calques de la map
+		const unsigned int GetNbLayers() const { return m_nbLayers; }
 
-		void Display(const bool state);
-		void CreateLayers(const unsigned int nbLayers);
-
-		//get et set
-		std::vector<Ndk::EntityHandle> GetEntities() const { return m_entities; }
-
-		const std::string& GetName() const { return NAME; }
-		void setName(std::string name) { NAME = std::move(name); }
-
-		const unsigned int GetNbLayers() const { return m_layerList.size(); }
-
-		Nz::Vector2f GetSize() const { return Nz::Vector2f{ SIZE.first, SIZE.second }; }
+		///Taille de la map
+		Nz::Vector2f GetSize() const { return Nz::Vector2f{ m_size.first, m_size.second }; }
 		void SetSize(Nz::Vector2f size) {
-			SIZE.first = size.x;
-			SIZE.second = size.y;
+			m_size.first = size.x;
+			m_size.second = size.y;
 		}
-
-		void setEntities(std::vector<Ndk::EntityHandle> entities) { m_entities = std::move(entities); }
-
-		const std::vector<std::size_t>& GetLayerByEntity() const { return m_LayerByEntity; }
-		void SetLayerByEntity(std::vector<std::size_t> layerByEntity) { m_LayerByEntity = std::move(layerByEntity); }
 	};
 }
 #endif // !MAP_H
