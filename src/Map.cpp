@@ -19,8 +19,13 @@ namespace NzP
 
 		if (fichier.is_open())
 		{
-			boost::archive::binary_iarchive iBinArchive(fichier);
+			//boost::archive::binary_iarchive iBinArchive(fichier);
+			//iBinArchive >> *this;
+			boost::archive::text_iarchive iBinArchive(fichier);
 			iBinArchive >> *this;
+			//
+			//Serialize();
+			//
 			return true;
 		}
 		else { return false; }
@@ -77,11 +82,21 @@ namespace NzP
 
 	bool Map::Serialize()
 	{
-		fs::path mapPath = GetFilePath().ToStdString();
+		/*fs::path mapPath = GetFilePath().ToStdString();
 		std::ofstream fichier(mapPath.c_str());
 		if (fichier.is_open())
 		{
 			boost::archive::binary_oarchive oBinArchive(fichier);
+			oBinArchive << *this;
+			return true;
+		}
+		return false;*/
+
+		fs::path mapPath = "D:/Programmation_2018/NazaraProject/NazaraProject/Ressources/Maps/VillageText.map";
+		std::ofstream fichier(mapPath.c_str());
+		if (fichier.is_open())
+		{
+			boost::archive::text_oarchive oBinArchive(fichier);
 			oBinArchive << *this;
 			return true;
 		}

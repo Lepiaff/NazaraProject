@@ -23,8 +23,6 @@ namespace NzP
 		void serialize(Archive& ar, const unsigned int version)
 		{
 			std::cout << "Serialize/Deserialize CollidableComponent" << std::endl;
-
-			ar & boost::serialization::base_object<Component>(*this);
 			ar & m_position;
 			std::cout << "CollidableComponent _ POSITION : " << m_position << std::endl;
 			ar & m_taille;
@@ -32,16 +30,16 @@ namespace NzP
 			std::cout << "FIN Serialize/Deserialize CollidableComponent " << std::endl;
 		}
 	public:
-		CollidableComponent() : Component("COLLIDABLE_COMPONENT") { ; }
+		CollidableComponent() = default;
 		virtual ~CollidableComponent() = default;
 
-		virtual void UpdateNazaraEntity(Ndk::EntityHandle entity) const override
+		inline virtual void UpdateNazaraEntity(Ndk::EntityHandle entity) const override
 		{
 			Ndk::CollisionComponent2D& collisionComponent = 
 				entity->AddComponent<Ndk::CollisionComponent2D>();
 		}
 
-		virtual void Save(Ndk::BaseComponent* comp) override
+		inline virtual void Save(Ndk::BaseComponent* comp) override
 		{
 
 		}

@@ -54,7 +54,7 @@ namespace NzP
 
 		const unsigned int GetIdLayer() const { return m_idLayer; }
 
-		void UpdateNazaraEntity(Ndk::EntityHandle entity)
+		inline void UpdateNazaraEntity(Ndk::EntityHandle entity)
 		{
 			if (m_nodeComponent)
 				m_nodeComponent->UpdateNazaraEntity(entity);
@@ -66,7 +66,7 @@ namespace NzP
 				m_collidableComponent->UpdateNazaraEntity(entity);
 		}
 
-		void Save(const Ndk::EntityHandle& entityHandle)
+		inline void Save(const Ndk::EntityHandle& entityHandle)
 		{
 			if (entityHandle->HasComponent<Ndk::NodeComponent>())
 			{

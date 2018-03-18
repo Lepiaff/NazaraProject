@@ -77,8 +77,10 @@ namespace NzP
 
 		if (m_newGamePressed)
 		{
-			///std::string mapPath = "D:/Programmation_2018/NazaraProject/NazaraProject/Ressources/Maps/VillageBinaryFullSize.map";
-			std::string mapPath = "D:/Programmation_2018/NazaraProject/NazaraProject/Ressources/Maps/VillageBinary.map";
+			//std::string mapPath = "D:/Programmation_2018/NazaraProject/NazaraProject/Ressources/Maps/VillageBinaryFullSize.map";
+			//std::string mapPath = "D:/Programmation_2018/NazaraProject/NazaraProject/Ressources/Maps/VillageBinary.map";
+			std::string mapPath = "D:/Programmation_2018/NazaraProject/NazaraProject/Ressources/Maps/VillageText.map";
+
 			auto gameState = std::make_shared<NzP::GameState>(m_stateData);
 			gameState->SetMap(mapPath);
 			fsm.ChangeState(gameState);

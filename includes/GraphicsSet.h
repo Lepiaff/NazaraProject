@@ -49,7 +49,7 @@ namespace NzP
 		bool LoadMaterial();
 		
 	public:
-		GraphicsSet() { ; }
+		GraphicsSet() {}
 		~GraphicsSet() { std::cout<<this->GetReferenceCount()<<std::endl; }
 
 		///Méthodes publiques
@@ -58,7 +58,7 @@ namespace NzP
 		bool IsValid() const;
 
 		template<typename... Args>
-		static GraphicsSetRef New(Args&&... args)
+		inline static GraphicsSetRef New(Args&&... args)
 		{
 			auto object(std::make_unique<GraphicsSet>(std::forward<Args>(args)...));
 			object->SetPersistent(false);

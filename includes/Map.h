@@ -23,6 +23,9 @@
 #include <boost/serialization/utility.hpp>
 #include <boost/serialization/vector.hpp>
 
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
+
 #include <NDK/Application.hpp>
 #include <Ndk/Entity.hpp>
 #include <Ndk/Entity.hpp>
@@ -69,8 +72,8 @@ namespace NzP
 		void serialize(Archive& ar, const unsigned int version)
 		{
 			std::cout << "Serialize/Deserialize Map" << std::endl;
-			ar & m_filePath;
-			std::cout << "Map _ m_filePath : " << m_filePath << std::endl;
+			//ar & m_filePath;
+			//std::cout << "Map _ m_filePath : " << m_filePath << std::endl;
 			ar & m_size;
 			std::cout << "Map _ m_size : " << m_size.first << " : " << m_size.second << std::endl;
 			ar & m_nbLayers;
@@ -119,7 +122,7 @@ namespace NzP
 		bool IsValid() const;
 
 		template<typename... Args>
-		static MapRef New(Args&&... args)
+		inline static MapRef New(Args&&... args)
 		{
 			auto object(std::make_unique<Map>(std::forward<Args>(args)...));
 			object->SetPersistent(false);
@@ -129,11 +132,11 @@ namespace NzP
 
 		//Accesseurs / Mutateurs
 		///Nombre de calques de la map
-		const unsigned int GetNbLayers() const { return m_nbLayers; }
+		inline const unsigned int GetNbLayers() const { return m_nbLayers; }
 
 		///Taille de la map
-		Nz::Vector2f GetSize() const { return Nz::Vector2f{ m_size.first, m_size.second }; }
-		void SetSize(Nz::Vector2f size) {
+		inline Nz::Vector2f GetSize() const { return Nz::Vector2f{ m_size.first, m_size.second }; }
+		inline void SetSize(Nz::Vector2f size) {
 			m_size.first = size.x;
 			m_size.second = size.y;
 		}

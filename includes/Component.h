@@ -26,21 +26,15 @@ namespace NzP
 		template<class Archive>
 		void serialize(Archive& ar, const unsigned int version)
 		{
-			//std::cout << "Serialize/Deserialize Component" << std::endl;
-			ar & m_type;
-			std::cout << "Component _ m_type : " << m_type << std::endl;
-			//std::cout << "FIN Serialize/Deserialize Component " << std::endl;
+
 		}
 
 	public:
-		Component(std::string type = "Component") { m_type = std::move(type); }
+		Component() = default;
 		virtual ~Component() = default;
 
-		virtual const std::string& Type() const { return m_type; }
 		virtual void UpdateNazaraEntity(Ndk::EntityHandle entity) const = 0;
 		virtual void Save(Ndk::BaseComponent* comp) = 0;
-	protected:
-		std::string m_type;
 	};
 }
 #endif // !COMPONENT_H

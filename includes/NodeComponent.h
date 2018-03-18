@@ -26,8 +26,6 @@ namespace NzP
 		void serialize(Archive& ar, const unsigned int version)
 		{
 			std::cout << "Serialize/Deserialize NodeComponent" << std::endl;
-
-			ar & boost::serialization::base_object<Component>(*this);
 			ar & m_position;
 			std::cout << "NodeComponent _ m_position : " << m_position.first << " : " << m_position.second << std::endl;
 			ar & m_scale;
@@ -37,10 +35,10 @@ namespace NzP
 			std::cout << "FIN Serialize/Deserialize NodeComponent " << std::endl;
 		}
 	public:
-		NodeComponent() : Component("NODE_COMPONENT") { ; }
+		NodeComponent() = default;
 		virtual ~NodeComponent() = default;
 
-		virtual void UpdateNazaraEntity(Ndk::EntityHandle entity) const override
+		inline virtual void UpdateNazaraEntity(Ndk::EntityHandle entity) const override
 		{
 			Ndk::NodeComponent& nodeComponent = entity->AddComponent<Ndk::NodeComponent>();
 			nodeComponent.SetPosition(m_position.first, m_position.second, 0);
@@ -48,7 +46,7 @@ namespace NzP
 			nodeComponent.Rotate(Nz::EulerAnglesf(0.f, 0.f, m_rotation));
 		}
 
-		virtual void Save(Ndk::BaseComponent* comp) override
+		inline virtual void Save(Ndk::BaseComponent* comp) override
 		{
 			Ndk::NodeComponent* nodeComp = static_cast<Ndk::NodeComponent*>(comp);
 			
